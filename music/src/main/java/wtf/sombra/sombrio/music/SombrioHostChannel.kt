@@ -12,7 +12,6 @@ import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.jellyfin.sdk.api.client.extensions.quickConnectApi
 import timber.log.Timber
 
 /**
@@ -93,7 +92,7 @@ class SombrioHostChannel(context: Context, private val scope: CoroutineScope) {
     private suspend fun authorizeQuickConnect(code: String) {
         val jellyfinApi = dependencies.jellyfinApi()
         val authorized =
-            jellyfinApi.api.quickConnectApi
+            jellyfinApi.authenticationApi
                 .authorizeQuickConnect(code = code, userId = jellyfinApi.userId)
                 .content
         check(authorized) { "The server didn't authorize the Quick Connect request" }

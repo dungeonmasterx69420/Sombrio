@@ -98,9 +98,10 @@ jobs:
       - name: Number the build
         run: echo "BUILD_NUMBER=$((100 + GITHUB_RUN_NUMBER))" >> "$GITHUB_ENV"
 
+      # --continue: when something doesn't compile, the rest is still built, to show every error at once
       - name: Build the APKs
         run: |
-          ./gradlew :app:phone:assembleLibreRelease -Psombrio.music=required -Psombrio.versionCode="$BUILD_NUMBER" \
+          ./gradlew --continue :app:phone:assembleLibreRelease -Psombrio.music=required -Psombrio.versionCode="$BUILD_NUMBER" \
             -Pandroid.injected.signing.store.file="$SIGNING_STORE_FILE" \
             -Pandroid.injected.signing.store.password="$SIGNING_STORE_PASSWORD" \
             -Pandroid.injected.signing.key.alias="$SIGNING_KEY_ALIAS" \
