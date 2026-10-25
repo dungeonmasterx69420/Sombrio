@@ -103,8 +103,10 @@ touch "$android"
 log="$module/build-aar.log"
 if ! flutter build aar --verbose --no-pub --no-debug --no-profile --dart-define=SOMBRIO=true \
   --target-platform android-arm,android-arm64,android-x64 > "$log" 2>&1; then
-  grep -E -A 25 "What went wrong|^e: |error:|FAILURE:" "$log" | head -400 >&2 || true
-  tail -n 60 "$log" >&2
+  # The Kotlin errors, and what Gradle says went wrong. Dokka, which generates the javadoc, complains about every
+  # library compiled with a newer Kotlin than its own, harmlessly, so those lines are left out.
+  grep -v "expected version is 1\.4\.2" "$log" | grep -E -B 2 -A 12 "^\s*e: |What went wrong|compileReleaseKotlin FAILED" |
+    head -n 250 >&2 || true
   echo "Building sombrAMP failed, see $log" >&2
   exit 1
 fi
