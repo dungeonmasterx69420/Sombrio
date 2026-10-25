@@ -1,5 +1,6 @@
 package dev.jdtech.jellyfin
 
+import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.tween
@@ -19,6 +20,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -98,6 +100,14 @@ val downloadsTab =
         icon = CoreR.drawable.ic_download,
         route = DownloadsRoute,
     )
+
+val musicTab =
+    TabBarItem(title = CoreR.string.title_music, icon = CoreR.drawable.ic_music, route = MusicRoute)
+
+/**
+ * sombrAMP, in the :music module, which is only there when it was built (see settings.gradle.kts).
+ */
+private const val MUSIC_ACTIVITY = "wtf.sombra.sombrio.music.MusicActivity"
 
 @Composable
 fun NavigationRoot(
@@ -203,11 +213,12 @@ private fun MainNavigation(
     permissionViewModel: PermissionViewModel,
     permissionApplicable: Boolean,
 ) {
+    val context = LocalContext.current
     val navigationItems =
         when (isOfflineMode) {
-            false -> listOf(homeTab, mediaTab, downloadsTab)
-            true -> listOf(homeTab, downloadsTab)
-        }
+            false -> listOf(homeTab, mediaTab, musicTab, downloadsTab)
+            true -> listOf(homeTab, musicTab, downloadsTab)
+        }.filter { it != musicTab || BuildConfig.HAS_MUSIC }
     val tabRoutes = navigationItems.map { it.route }
 
     val topLevelRoute = navigationState.topLevelRoute
@@ -266,11 +277,15 @@ private fun MainNavigation(
                 item(
                     selected = topLevelRoute == item.route,
                     onClick = {
-                        if (item.route == MediaRoute && topLevelRoute == MediaRoute) {
-                            searchExpanded.value = true
-                        }
+                        if (item.route == MusicRoute) {
+                            context.startActivity(Intent().setClassName(context, MUSIC_ACTIVITY))
+                        } else {
+                            if (item.route == MediaRoute && topLevelRoute == MediaRoute) {
+                                searchExpanded.value = true
+                            }
 
-                        navigator.navigate(item.route)
+                            navigator.navigate(item.route)
+                        }
                     },
                     icon = {
                         Icon(

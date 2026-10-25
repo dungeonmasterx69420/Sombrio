@@ -24,6 +24,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable data object DownloadsRoute : NavKey
 
+/** The Music tab, which opens sombrAMP in its own activity rather than navigating. */
+@Serializable data object MusicRoute : NavKey
+
 @Serializable
 data class LibraryRoute(
     val libraryId: String,

@@ -11,20 +11,27 @@ plugins {
 
 java { toolchain { languageVersion = Versions.JAVA } }
 
+val hasMusic = rootProject.findProject(":music") != null
+
 android {
     namespace = "dev.jdtech.jellyfin"
     compileSdk = Versions.COMPILE_SDK
     buildToolsVersion = Versions.BUILD_TOOLS
 
     defaultConfig {
-        applicationId = "dev.jdtech.jellyfin"
+        applicationId = "wtf.sombra.sombrio"
         minSdk = Versions.MIN_SDK
         targetSdk = Versions.TARGET_SDK
 
-        versionCode = Versions.APP_CODE
+        // CI numbers every build, so that each one installs over the last (see .github/workflows/sombrio.yaml)
+        versionCode =
+            providers.gradleProperty("sombrio.versionCode").orNull?.toInt() ?: Versions.APP_CODE
         versionName = Versions.APP_NAME
 
         testInstrumentationRunner = "dev.jdtech.jellyfin.HiltTestRunner"
+
+        // Whether the Music tab is built in, see settings.gradle.kts
+        buildConfigField("boolean", "HAS_MUSIC", hasMusic.toString())
     }
 
     buildTypes {
@@ -62,7 +69,8 @@ android {
             isEnable = !isBuildingBundle
 
             reset()
-            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            // The ABIs Flutter, which the Music tab runs on, is built for
+            include("armeabi-v7a", "arm64-v8a", "x86_64")
         }
     }
 
@@ -88,6 +96,7 @@ dependencies {
     implementation(projects.setup)
     implementation(projects.modes.film)
     implementation(projects.settings)
+    if (hasMusic) implementation(project(":music"))
 
     implementation(libs.aboutlibraries.core)
     implementation(libs.aboutlibraries.compose.m3)
