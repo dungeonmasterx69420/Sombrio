@@ -66,6 +66,12 @@ sed -i -E \
 # Its Gradle properties too: some plugins use their dependencies' resources through their own R class, which needs R
 # classes to be transitive.
 cp "$app/android/gradle.properties" "$android/gradle.properties"
+# Nothing of this build stays running afterwards: its Gradle daemon (with the app's 8 GB heap) and Kotlin daemon would
+# keep that memory from the Sombrio build that follows.
+cat >> "$android/gradle.properties" <<'PROPERTIES'
+org.gradle.daemon=false
+kotlin.compiler.execution.strategy=in-process
+PROPERTIES
 cat >> "$android/build.gradle" <<'GRADLE'
 
 // Added by Sombrio's music/build-module.sh, as in sombrAMP's android/build.gradle: some plugins compile against Android
