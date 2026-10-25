@@ -2,6 +2,7 @@ package dev.jdtech.jellyfin.presentation.film.components
 
 import android.app.DownloadManager
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
@@ -21,7 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,8 +29,10 @@ import androidx.compose.ui.unit.dp
 import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.core.presentation.downloader.DownloaderState
 import dev.jdtech.jellyfin.models.UiText
+import dev.jdtech.jellyfin.presentation.components.SystemSIconButton
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
+import dev.jdtech.jellyfin.presentation.theme.systemS
 import kotlin.math.roundToInt
 
 @Composable
@@ -41,11 +43,12 @@ fun DownloaderCard(state: DownloaderState, onCancelClick: () -> Unit, onRetryCli
             animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
         )
 
+    // System S: downloading is live, so it glows; a paused download is muted, and a failed one ink.
+    val systemS = MaterialTheme.systemS
     val textColor =
         when (state.status) {
-            DownloadManager.STATUS_PAUSED -> Color.Yellow
-            DownloadManager.STATUS_FAILED -> MaterialTheme.colorScheme.error
-            else -> MaterialTheme.colorScheme.onSurface
+            DownloadManager.STATUS_PAUSED -> systemS.palette.muted
+            else -> systemS.palette.ink
         }
 
     val statusText =
@@ -58,19 +61,14 @@ fun DownloaderCard(state: DownloaderState, onCancelClick: () -> Unit, onRetryCli
 
     val progressIndicatorColor =
         when (state.status) {
-            DownloadManager.STATUS_PAUSED -> Color.Yellow
-            DownloadManager.STATUS_SUCCESSFUL -> Color.Green
-            DownloadManager.STATUS_FAILED -> MaterialTheme.colorScheme.error
-            else -> ProgressIndicatorDefaults.linearColor
+            DownloadManager.STATUS_PAUSED -> systemS.palette.muted
+            DownloadManager.STATUS_FAILED -> systemS.palette.ink
+            else -> systemS.phosphor
         }
 
-    val progressTrackColor =
-        when (state.status) {
-            DownloadManager.STATUS_FAILED -> MaterialTheme.colorScheme.errorContainer
-            else -> ProgressIndicatorDefaults.linearTrackColor
-        }
+    val progressTrackColor = systemS.palette.inset
 
-    OutlinedCard {
+    OutlinedCard(border = BorderStroke(1.dp, systemS.palette.ink)) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(MaterialTheme.spacings.medium),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.medium),
@@ -94,7 +92,13 @@ fun DownloaderCard(state: DownloaderState, onCancelClick: () -> Unit, onRetryCli
                 Spacer(Modifier.height(MaterialTheme.spacings.small))
                 when (state.status) {
                     DownloadManager.STATUS_PENDING -> {
-                        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                        LinearProgressIndicator(
+                            modifier = Modifier.fillMaxWidth(),
+                            color = progressIndicatorColor,
+                            trackColor = progressTrackColor,
+                            strokeCap = StrokeCap.Butt,
+                            gapSize = 0.dp,
+                        )
                     }
                     else -> {
                         LinearProgressIndicator(
@@ -102,6 +106,9 @@ fun DownloaderCard(state: DownloaderState, onCancelClick: () -> Unit, onRetryCli
                             modifier = Modifier.fillMaxWidth(),
                             color = progressIndicatorColor,
                             trackColor = progressTrackColor,
+                            strokeCap = StrokeCap.Butt,
+                            gapSize = 0.dp,
+                            drawStopIndicator = {},
                         )
                     }
                 }
@@ -109,7 +116,7 @@ fun DownloaderCard(state: DownloaderState, onCancelClick: () -> Unit, onRetryCli
                 if (state.errorText != null) {
                     Text(
                         text = state.errorText!!.asString(),
-                        color = MaterialTheme.colorScheme.error,
+                        color = systemS.palette.ink,
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
@@ -118,7 +125,7 @@ fun DownloaderCard(state: DownloaderState, onCancelClick: () -> Unit, onRetryCli
                 when (state.status) {
                     DownloadManager.STATUS_PENDING,
                     DownloadManager.STATUS_RUNNING -> {
-                        FilledTonalIconButton(onClick = onCancelClick) {
+                        SystemSIconButton(onClick = onCancelClick) {
                             Icon(
                                 painter = painterResource(CoreR.drawable.ic_x),
                                 contentDescription = null,
@@ -126,7 +133,7 @@ fun DownloaderCard(state: DownloaderState, onCancelClick: () -> Unit, onRetryCli
                         }
                     }
                     DownloadManager.STATUS_FAILED -> {
-                        FilledTonalIconButton(onClick = onRetryClick) {
+                        SystemSIconButton(onClick = onRetryClick) {
                             Icon(
                                 painter = painterResource(CoreR.drawable.ic_rotate_ccw),
                                 contentDescription = null,

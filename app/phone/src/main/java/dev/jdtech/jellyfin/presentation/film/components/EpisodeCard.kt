@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyEpisode
 import dev.jdtech.jellyfin.models.FindroidEpisode
 import dev.jdtech.jellyfin.models.isDownloaded
+import dev.jdtech.jellyfin.presentation.components.systemSFrame
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 
@@ -47,7 +48,7 @@ fun EpisodeCard(episode: FindroidEpisode, onClick: () -> Unit, modifier: Modifie
             ItemPoster(
                 item = episode,
                 direction = Direction.HORIZONTAL,
-                modifier = Modifier.clip(MaterialTheme.shapes.small),
+                modifier = Modifier.systemSFrame().padding(1.dp),
             )
             Row(
                 modifier = Modifier.align(Alignment.TopEnd).padding(MaterialTheme.spacings.small),

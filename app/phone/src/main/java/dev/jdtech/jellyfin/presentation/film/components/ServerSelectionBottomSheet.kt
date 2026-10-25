@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
@@ -18,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -26,8 +26,11 @@ import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyServer
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyServerAddress
 import dev.jdtech.jellyfin.models.ServerWithAddresses
+import dev.jdtech.jellyfin.presentation.components.SystemSButton
+import dev.jdtech.jellyfin.presentation.components.systemSMenuBarTop
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
+import dev.jdtech.jellyfin.presentation.theme.systemS
 import dev.jdtech.jellyfin.setup.presentation.servers.ServersAction
 import dev.jdtech.jellyfin.setup.presentation.servers.ServersEvent
 import dev.jdtech.jellyfin.setup.presentation.servers.ServersState
@@ -75,7 +78,13 @@ private fun ServerSelectionBottomSheetLayout(
     onDismissRequest: () -> Unit,
     sheetState: SheetState = rememberModalBottomSheetState(),
 ) {
-    ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
+    ModalBottomSheet(
+        shape = RectangleShape,
+        containerColor = MaterialTheme.systemS.palette.pane,
+        modifier = Modifier.systemSMenuBarTop(),
+        onDismissRequest = onDismissRequest,
+        sheetState = sheetState,
+    ) {
         LazyColumn(
             contentPadding =
                 PaddingValues(
@@ -97,7 +106,7 @@ private fun ServerSelectionBottomSheetLayout(
                 )
             }
             item(key = "manage") {
-                OutlinedButton(onClick = onManage, modifier = Modifier.fillMaxWidth()) {
+                SystemSButton(onClick = onManage, modifier = Modifier.fillMaxWidth()) {
                     Text(text = stringResource(CoreR.string.manage_servers))
                 }
             }

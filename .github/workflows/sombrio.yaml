@@ -1,0 +1,191 @@
+name: Sombrio builds
+
+# Release builds of Sombrio for Android, with the Music tab: sombrAMP (music/sombrAMP) is built as a Flutter module
+# first (music/build-module.sh), then the app around it. Every run uploads one APK per ABI as artifacts.
+#
+# Builds of main whose APKs are signed with the key from the secrets are also published as GitHub releases tagged
+# build-<versionCode>. The app offers them as updates. The five newest are kept.
+#
+# Optional repository secrets:
+#   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
+#     sign the APKs with your own key. Without them each build gets a throwaway key, so a newer build only installs
+#     over an older one after uninstalling it, and nothing is released.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '**'
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The Flutter version sombrAMP is built with (FLUTTER_VERSION in music/sombrAMP/.github/workflows/sombramp.yml)
+  FLUTTER_VERSION: '3.47.7'
+
+jobs:
+  android:
+    name: Android
+    runs-on: ubuntu-latest
+    outputs:
+      signed: ${{ steps.signing.outputs.signed }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v6
+        with:
+          submodules: true
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Free up disk space
+        run: sudo rm -rf /usr/share/dotnet /usr/share/swift /usr/local/.ghcup /usr/local/julia* /usr/local/share/powershell
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Build sombrAMP for the Music tab
+        run: music/build-module.sh
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Set up signing
+        id: signing
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          keystore="$RUNNER_TEMP/release.jks"
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > "$keystore"
+            alias="$KEY_ALIAS"
+            store_password="$KEYSTORE_PASSWORD"
+            key_password="${KEY_PASSWORD:-$KEYSTORE_PASSWORD}"
+            echo "signed=true" >> "$GITHUB_OUTPUT"
+            echo "The APKs are signed with the release key from the repository secrets." >> "$GITHUB_STEP_SUMMARY"
+          else
+            alias=sombrio
+            store_password="$(openssl rand -hex 16)"
+            key_password="$store_password"
+            keytool -genkeypair -keystore "$keystore" -storetype PKCS12 -alias "$alias" -keyalg RSA -keysize 2048 \
+              -validity 10000 -storepass "$store_password" -keypass "$key_password" -dname "CN=Sombrio"
+            echo "::warning::No ANDROID_KEYSTORE_BASE64 secret: these APKs are signed with a throwaway key."
+            echo "The APKs are signed with a throwaway key. To install a later build over one, uninstall it first, or add the ANDROID_KEYSTORE_* secrets." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "::add-mask::$store_password"
+          echo "::add-mask::$key_password"
+          {
+            echo "SIGNING_STORE_FILE=$keystore"
+            echo "SIGNING_STORE_PASSWORD=$store_password"
+            echo "SIGNING_KEY_ALIAS=$alias"
+            echo "SIGNING_KEY_PASSWORD=$key_password"
+          } >> "$GITHUB_ENV"
+
+      # Every build gets a higher versionCode than the last, so Android installs it as an update. 100 keeps it above
+      # Findroid's own version codes.
+      - name: Number the build
+        run: echo "BUILD_NUMBER=$((100 + GITHUB_RUN_NUMBER))" >> "$GITHUB_ENV"
+
+      # --continue: when something doesn't compile, the rest is still built, to show every error at once. R8 needs
+      # more memory than gradle.properties gives Gradle for the app with sombrAMP in it.
+      - name: Build the APKs
+        run: |
+          ./gradlew --continue :app:phone:assembleLibreRelease -Psombrio.music=required \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8" -Pkotlin.daemon.jvmargs=-Xmx3g \
+            -Psombrio.versionCode="$BUILD_NUMBER" \
+            -Pandroid.injected.signing.store.file="$SIGNING_STORE_FILE" \
+            -Pandroid.injected.signing.store.password="$SIGNING_STORE_PASSWORD" \
+            -Pandroid.injected.signing.key.alias="$SIGNING_KEY_ALIAS" \
+            -Pandroid.injected.signing.key.password="$SIGNING_KEY_PASSWORD"
+
+      - name: Name the APKs
+        run: |
+          mkdir apks
+          for apk in app/phone/build/outputs/apk/libre/release/phone-libre-*-release.apk; do
+            abi="${apk##*/phone-libre-}"
+            abi="${abi%-release.apk}"
+            cp "$apk" "apks/sombrio-${GITHUB_REF_NAME//\//-}-$abi.apk"
+          done
+          ls -l apks
+
+      # Each APK has the Music tab: the Flutter engine, sombrAMP compiled for its ABI and its assets, and the activity
+      # it runs in.
+      - name: Check the APKs
+        run: |
+          aapt2="$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | sort -V | tail -n 1)"
+          for apk in apks/*.apk; do
+            abi="$(grep -oE '(armeabi-v7a|arm64-v8a|x86_64)\.apk$' <<< "$apk")"
+            abi="${abi%.apk}"
+            files="$(unzip -Z1 "$apk")"
+            for file in "lib/$abi/libflutter.so" "lib/$abi/libapp.so" assets/flutter_assets/; do
+              grep -q "^$file" <<< "$files" || { echo "::error::$apk has no $file"; exit 1; }
+            done
+            manifest="$("$aapt2" dump xmltree --file AndroidManifest.xml "$apk")"
+            grep -q "wtf.sombra.sombrio.music.MusicActivity" <<< "$manifest" ||
+              { echo "::error::$apk has no MusicActivity"; exit 1; }
+            badging="$("$aapt2" dump badging "$apk")"
+            echo "$abi: ${badging%%$'\n'*}"
+          done
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: sombrio-android
+          path: apks/*.apk
+          compression-level: 0 # an APK is already compressed
+
+  release:
+    name: Release
+    needs: android
+    if: github.ref == 'refs/heads/main' && needs.android.outputs.signed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to publish releases
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v7
+        with:
+          name: sombrio-android
+          path: artifacts
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          build="$((100 + GITHUB_RUN_NUMBER))"
+          tag="build-$build"
+          mkdir release
+          # Named by ABI, which the app's updater picks its APK by
+          for apk in artifacts/*.apk; do
+            abi="${apk##*-main-}"
+            cp "$apk" "release/sombrio-build-$build-$abi"
+          done
+          ls -l release
+          # The notes say what changed: a merged pull request's title, or the commit's subject
+          subject="$(git log -1 --format=%s)"
+          case "$subject" in
+            "Merge pull request"*) notes="$(git log -1 --format=%b)" ;;
+            *) notes="$subject" ;;
+          esac
+          gh release create "$tag" release/* --target "$GITHUB_SHA" --title "Sombrio build $build" \
+            --notes "$notes" --latest
+          echo "Released as [$tag](https://github.com/$GH_REPO/releases/tag/$tag)." >> "$GITHUB_STEP_SUMMARY"
+
+          # Keep the five newest builds
+          gh release list --limit 100 --json tagName,createdAt \
+            --jq '[.[] | select(.tagName | startswith("build-"))] | sort_by(.createdAt) | reverse | .[5:][] | .tagName' |
+            while read -r old; do gh release delete "$old" --cleanup-tag --yes; done

@@ -15,6 +15,12 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        // sombrAMP and its plugins, built by music/build-module.sh, and the Flutter engine they run on
+        maven { url = uri(rootDir.resolve("music/module/build/host/outputs/repo")) }
+        maven {
+            url = uri("https://storage.googleapis.com/download.flutter.io")
+            content { includeGroup("io.flutter") }
+        }
     }
 }
 

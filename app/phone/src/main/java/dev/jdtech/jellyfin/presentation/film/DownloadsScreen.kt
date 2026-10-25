@@ -31,6 +31,8 @@ import dev.jdtech.jellyfin.film.presentation.downloads.DownloadsViewModel
 import dev.jdtech.jellyfin.models.CollectionSection
 import dev.jdtech.jellyfin.models.FindroidItem
 import dev.jdtech.jellyfin.models.UiText
+import dev.jdtech.jellyfin.presentation.components.SystemSDefaults
+import dev.jdtech.jellyfin.presentation.components.systemSMenuBar
 import dev.jdtech.jellyfin.presentation.film.components.CollectionGrid
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 
@@ -66,6 +68,8 @@ private fun DownloadsScreenLayout(state: CollectionState, onAction: (CollectionA
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
+                colors = SystemSDefaults.topAppBarColors(),
+                modifier = Modifier.systemSMenuBar(),
                 title = { Text(text = stringResource(CoreR.string.title_download)) },
                 windowInsets = WindowInsets.statusBars.union(WindowInsets.displayCutout),
                 scrollBehavior = scrollBehavior,

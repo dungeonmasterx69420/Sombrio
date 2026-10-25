@@ -2,6 +2,7 @@ package dev.jdtech.jellyfin.presentation.film.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -11,9 +12,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyVideoMetadata
 import dev.jdtech.jellyfin.models.AudioCodec
@@ -21,6 +22,7 @@ import dev.jdtech.jellyfin.models.DisplayProfile
 import dev.jdtech.jellyfin.models.VideoMetadata
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
+import dev.jdtech.jellyfin.presentation.theme.systemS
 
 @Composable
 fun VideoMetadataBar(videoMetadata: VideoMetadata) {
@@ -53,8 +55,9 @@ fun VideoMetadataBar(videoMetadata: VideoMetadata) {
 fun VideoMetadataBarItem(text: String, @DrawableRes icon: Int? = null) {
     Row(
         modifier =
-            Modifier.clip(MaterialTheme.shapes.small)
-                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+            // System S tags: panes with an ink edge
+            Modifier.background(MaterialTheme.systemS.palette.pane)
+                .border(1.dp, MaterialTheme.systemS.palette.ink)
                 .padding(
                     horizontal = MaterialTheme.spacings.small,
                     vertical = MaterialTheme.spacings.extraSmall,

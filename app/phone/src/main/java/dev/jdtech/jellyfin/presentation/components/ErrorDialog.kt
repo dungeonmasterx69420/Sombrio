@@ -11,24 +11,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
+import dev.jdtech.jellyfin.presentation.theme.systemS
 
 @Composable
 fun ErrorDialog(exception: Throwable, onDismissRequest: () -> Unit) {
@@ -36,8 +37,9 @@ fun ErrorDialog(exception: Throwable, onDismissRequest: () -> Unit) {
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
-            modifier = Modifier.fillMaxWidth().heightIn(200.dp, max = 540.dp),
-            shape = RoundedCornerShape(28.dp),
+            modifier = Modifier.systemSDialogFrame().fillMaxWidth().heightIn(200.dp, max = 540.dp),
+            shape = RectangleShape,
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.systemS.palette.pane),
         ) {
             Column {
                 Spacer(modifier = Modifier.height(MaterialTheme.spacings.default))
@@ -53,13 +55,12 @@ fun ErrorDialog(exception: Throwable, onDismissRequest: () -> Unit) {
                 Column(
                     modifier =
                         Modifier.weight(1f)
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .background(MaterialTheme.systemS.palette.well)
                             .verticalScroll(rememberScrollState())
                 ) {
                     Spacer(modifier = Modifier.height(MaterialTheme.spacings.small))
                     Text(
                         text = exception.stackTraceToString(),
-                        fontFamily = FontFamily.Monospace,
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }

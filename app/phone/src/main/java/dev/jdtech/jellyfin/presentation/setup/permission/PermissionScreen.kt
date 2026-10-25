@@ -15,10 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -36,6 +34,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.jdtech.jellyfin.presentation.components.SystemSButton
 import dev.jdtech.jellyfin.presentation.setup.components.RootLayout
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.settings.R as SettingsR
@@ -150,13 +149,14 @@ private fun PermissionScreenLayout(
             }
             Spacer(modifier = Modifier.height(32.dp))
             Column(modifier = Modifier.widthIn(max = 480.dp)) {
-                OutlinedButton(onClick = onSkipClick, modifier = Modifier.fillMaxWidth()) {
+                SystemSButton(onClick = onSkipClick, modifier = Modifier.fillMaxWidth()) {
                     Text(text = stringResource(SetupR.string.permission_btn_not_now))
                 }
-                Spacer(modifier = Modifier.height(4.dp))
-                Button(
+                Spacer(modifier = Modifier.height(12.dp))
+                SystemSButton(
                     onClick = if (permanentlyDenied) onOpenSettingsClick else onGrantClick,
                     modifier = Modifier.fillMaxWidth(),
+                    isDefault = true,
                 ) {
                     Text(
                         text =

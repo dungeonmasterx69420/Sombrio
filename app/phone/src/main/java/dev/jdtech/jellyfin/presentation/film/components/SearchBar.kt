@@ -2,15 +2,13 @@ package dev.jdtech.jellyfin.presentation.film.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,7 +36,9 @@ import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.film.R as FilmR
 import dev.jdtech.jellyfin.film.presentation.search.SearchAction
 import dev.jdtech.jellyfin.film.presentation.search.SearchState
+import dev.jdtech.jellyfin.presentation.components.SystemSSpinner
 import dev.jdtech.jellyfin.presentation.theme.spacings
+import dev.jdtech.jellyfin.presentation.theme.systemS
 import dev.jdtech.jellyfin.presentation.utils.GridCellsAdaptiveWithMinColumns
 import dev.jdtech.jellyfin.presentation.utils.rememberSafePadding
 import kotlinx.coroutines.delay
@@ -137,7 +138,7 @@ fun FilmSearchBar(
                 },
                 trailingIcon = {
                     if (state.loading) {
-                        Box(modifier = Modifier.size(32.dp)) { CircularProgressIndicator() }
+                        SystemSSpinner()
                     } else if (query.isNotEmpty()) {
                         IconButton(onClick = { query = "" }) {
                             Icon(
@@ -151,7 +152,22 @@ fun FilmSearchBar(
         },
         expanded = expanded,
         onExpandedChange = { onExpand(it) },
-        modifier = modifier.padding(start = searchBarPaddingStart, end = searchBarPaddingEnd),
+        modifier =
+            modifier
+                .padding(start = searchBarPaddingStart, end = searchBarPaddingEnd)
+                .then(
+                    // System S: a square well with an ink edge, until it opens over the screen
+                    if (expanded) Modifier
+                    else Modifier.border(1.dp, MaterialTheme.systemS.palette.ink)
+                ),
+        shape = RectangleShape,
+        colors =
+            SearchBarDefaults.colors(
+                containerColor = MaterialTheme.systemS.palette.pane,
+                dividerColor = MaterialTheme.systemS.palette.ink,
+            ),
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp,
     ) {
         LazyVerticalGrid(
             columns = GridCellsAdaptiveWithMinColumns(minSize = 160.dp, minColumns = 2),

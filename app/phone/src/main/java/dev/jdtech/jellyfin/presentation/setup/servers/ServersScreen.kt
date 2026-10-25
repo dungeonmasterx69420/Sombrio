@@ -1,19 +1,18 @@
 package dev.jdtech.jellyfin.presentation.setup.servers
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,10 +38,15 @@ import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyServer
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyServerAddress
 import dev.jdtech.jellyfin.models.ServerWithAddresses
+import dev.jdtech.jellyfin.presentation.components.SombraMark
+import dev.jdtech.jellyfin.presentation.components.SystemSDefaults
+import dev.jdtech.jellyfin.presentation.components.systemSDialogFrame
 import dev.jdtech.jellyfin.presentation.setup.components.RootLayout
 import dev.jdtech.jellyfin.presentation.setup.components.ServerBottomSheet
 import dev.jdtech.jellyfin.presentation.setup.components.ServerItem
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.SystemSButtonShape
+import dev.jdtech.jellyfin.presentation.theme.systemS
 import dev.jdtech.jellyfin.setup.R as SetupR
 import dev.jdtech.jellyfin.setup.presentation.servers.ServersAction
 import dev.jdtech.jellyfin.setup.presentation.servers.ServersEvent
@@ -108,11 +112,7 @@ private fun ServersScreenLayout(
                     .align(Alignment.Center)
         ) {
             Spacer(modifier = Modifier.weight(0.2f))
-            Image(
-                painter = painterResource(id = CoreR.drawable.ic_banner),
-                contentDescription = null,
-                modifier = Modifier.width(250.dp).align(Alignment.CenterHorizontally),
-            )
+            SombraMark(height = 72.dp, modifier = Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.height(32.dp))
             Text(
                 text = stringResource(SetupR.string.servers),
@@ -159,15 +159,23 @@ private fun ServersScreenLayout(
             }
         }
         ExtendedFloatingActionButton(
+            shape = SystemSButtonShape,
+            containerColor = MaterialTheme.systemS.palette.pane,
+            contentColor = MaterialTheme.systemS.palette.ink,
+            elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
             onClick = { onAction(ServersAction.OnAddClick) },
             icon = { Icon(painterResource(CoreR.drawable.ic_plus), contentDescription = null) },
             text = { Text(text = stringResource(SetupR.string.servers_btn_add_server)) },
-            modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp),
+            modifier =
+                Modifier.align(Alignment.BottomEnd)
+                    .padding(24.dp)
+                    .then(SystemSDefaults.fabModifier()),
         )
     }
 
     if (openDeleteDialog && selectedServer != null) {
         AlertDialog(
+            modifier = Modifier.systemSDialogFrame(),
             title = { Text(text = stringResource(SetupR.string.remove_server_dialog)) },
             text = {
                 Text(

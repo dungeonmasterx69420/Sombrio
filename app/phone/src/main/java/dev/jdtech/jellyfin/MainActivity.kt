@@ -9,8 +9,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import dev.jdtech.jellyfin.core.presentation.theme.SystemSPhosphor
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.utils.LocalOfflineMode
+import dev.jdtech.jellyfin.updates.AppUpdatePrompt
 import dev.jdtech.jellyfin.viewmodels.MainViewModel
 
 @AndroidEntryPoint
@@ -25,7 +27,16 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val state by viewModel.state.collectAsStateWithLifecycle()
 
-            FindroidTheme(dynamicColor = state.isDynamicColors) {
+            FindroidTheme(
+                darkTheme =
+                    when (state.theme) {
+                        "light" -> false
+                        "system" -> null
+                        else -> true
+                    },
+                phosphor = SystemSPhosphor.fromKey(state.phosphor),
+                amoled = state.isAmoled,
+            ) {
                 if (!state.isLoading) {
                     CompositionLocalProvider(LocalOfflineMode provides state.isOfflineMode) {
                         NavigationRoot(
@@ -33,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                             hasCurrentServer = state.hasCurrentServer,
                             hasCurrentUser = state.hasCurrentUser,
                         )
+                        AppUpdatePrompt(isOfflineMode = state.isOfflineMode)
                     }
                 }
             }

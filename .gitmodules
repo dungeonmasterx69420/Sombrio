@@ -1,0 +1,4 @@
+[submodule "music/sombrAMP"]
+	path = music/sombrAMP
+	url = https://github.com/dungeonmasterx69420/sombrAMP
+	branch = redesign

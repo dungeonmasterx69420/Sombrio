@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import dev.jdtech.jellyfin.presentation.components.systemSDesk
 import dev.jdtech.jellyfin.presentation.utils.plus
 import dev.jdtech.jellyfin.presentation.utils.rememberSafePadding
 
@@ -22,5 +23,9 @@ fun RootLayout(padding: PaddingValues = PaddingValues(), content: @Composable Bo
             bottom = safePadding.bottom,
         )
 
-    Box(modifier = Modifier.fillMaxSize().padding(safePaddingValues + padding), content = content)
+    // The sign-in happens on System S's dotted desk, as in sombrAMP
+    Box(
+        modifier = Modifier.fillMaxSize().systemSDesk().padding(safePaddingValues + padding),
+        content = content,
+    )
 }

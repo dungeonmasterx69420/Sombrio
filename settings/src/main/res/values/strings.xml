@@ -21,7 +21,7 @@
     <string name="settings_category_permissions">Permissions</string>
     <string name="permission_local_network">Local network access</string>
     <string name="permission_local_network_summary">Required to find and connect to servers on your local network</string>
-    <string name="permission_local_network_rationale">Findroid needs access to your local network to find and connect to your Jellyfin server. Remote servers are not affected.</string>
+    <string name="permission_local_network_rationale">Sombrio needs access to your local network to find and connect to your Jellyfin server. Remote servers are not affected.</string>
     <string name="permission_status_granted">Granted</string>
     <string name="permission_status_denied">Denied</string>
     <string name="pref_player_mpv_hwdec">Hardware decoding</string>
@@ -74,6 +74,12 @@
     <string name="theme_dark">Dark</string>
     <string name="dynamic_colors">Dynamic colors</string>
     <string name="dynamic_colors_summary">Use Material You Dynamic colors (only available on Android 12+)</string>
+    <string name="phosphor">Phosphor</string>
+    <string name="phosphor_summary">The colour of what\'s live: progress, downloads, what you\'ve watched and the focus</string>
+    <string name="phosphor_amber">Amber</string>
+    <string name="phosphor_green">Green</string>
+    <string name="phosphor_cyan">Cyan</string>
+    <string name="phosphor_pink">Pink</string>
     <string name="extra_info">Display Extra Info</string>
     <string name="extra_info_summary">Displays detailed information about Audio, Video and Subtitles</string>
     <string name="mb">MB</string>

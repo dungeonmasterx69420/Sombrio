@@ -39,3 +39,6 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
+
+# sombrAMP built as a Flutter module, see music/build-module.sh
+music/module/

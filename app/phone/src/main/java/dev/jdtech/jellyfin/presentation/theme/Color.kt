@@ -1,84 +1,57 @@
 package dev.jdtech.jellyfin.presentation.theme
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
-import dev.jdtech.jellyfin.core.presentation.theme.ColorDark
-import dev.jdtech.jellyfin.core.presentation.theme.ColorLight
+import androidx.compose.ui.graphics.Color
+import dev.jdtech.jellyfin.core.presentation.theme.SystemSColors
 
-val lightScheme =
-    lightColorScheme(
-        primary = ColorLight.primaryLight,
-        onPrimary = ColorLight.onPrimaryLight,
-        primaryContainer = ColorLight.primaryContainerLight,
-        onPrimaryContainer = ColorLight.onPrimaryContainerLight,
-        secondary = ColorLight.secondaryLight,
-        onSecondary = ColorLight.onSecondaryLight,
-        secondaryContainer = ColorLight.secondaryContainerLight,
-        onSecondaryContainer = ColorLight.onSecondaryContainerLight,
-        tertiary = ColorLight.tertiaryLight,
-        onTertiary = ColorLight.onTertiaryLight,
-        tertiaryContainer = ColorLight.tertiaryContainerLight,
-        onTertiaryContainer = ColorLight.onTertiaryContainerLight,
-        error = ColorLight.errorLight,
-        onError = ColorLight.onErrorLight,
-        errorContainer = ColorLight.errorContainerLight,
-        onErrorContainer = ColorLight.onErrorContainerLight,
-        background = ColorLight.backgroundLight,
-        onBackground = ColorLight.onBackgroundLight,
-        surface = ColorLight.surfaceLight,
-        onSurface = ColorLight.onSurfaceLight,
-        surfaceVariant = ColorLight.surfaceVariantLight,
-        onSurfaceVariant = ColorLight.onSurfaceVariantLight,
-        outline = ColorLight.outlineLight,
-        outlineVariant = ColorLight.outlineVariantLight,
-        scrim = ColorLight.scrimLight,
-        inverseSurface = ColorLight.inverseSurfaceLight,
-        inverseOnSurface = ColorLight.inverseOnSurfaceLight,
-        inversePrimary = ColorLight.inversePrimaryLight,
-        surfaceDim = ColorLight.surfaceDimLight,
-        surfaceBright = ColorLight.surfaceBrightLight,
-        surfaceContainerLowest = ColorLight.surfaceContainerLowestLight,
-        surfaceContainerLow = ColorLight.surfaceContainerLowLight,
-        surfaceContainer = ColorLight.surfaceContainerLight,
-        surfaceContainerHigh = ColorLight.surfaceContainerHighLight,
-        surfaceContainerHighest = ColorLight.surfaceContainerHighestLight,
+/**
+ * The [ColorScheme] System S maps onto Material, as in sombrAMP.
+ *
+ * Controls are ink on pane, so `primary` is ink. The phosphor only marks what is live (playing,
+ * downloading, progress, focus) and lives in `secondary` and `tertiary`. System S has no red:
+ * problems are shown inverted, ink on pane, so `error` is ink too.
+ */
+fun systemSColorScheme(s: SystemSColors): ColorScheme {
+    val p = s.palette
+    val base = if (p.isDark) darkColorScheme() else lightColorScheme()
+    return base.copy(
+        primary = p.ink,
+        onPrimary = p.pane,
+        primaryContainer = p.hover,
+        onPrimaryContainer = p.ink,
+        inversePrimary = p.pane,
+        secondary = s.phosphorInk,
+        onSecondary = s.onPhosphor,
+        secondaryContainer = p.ink,
+        onSecondaryContainer = p.pane,
+        tertiary = s.phosphorInk,
+        onTertiary = s.onPhosphor,
+        tertiaryContainer = p.hover,
+        onTertiaryContainer = p.ink,
+        background = p.desk,
+        onBackground = p.ink,
+        surface = p.desk,
+        onSurface = p.ink,
+        surfaceVariant = p.pane,
+        onSurfaceVariant = p.muted,
+        surfaceTint = Color.Transparent,
+        inverseSurface = p.ink,
+        inverseOnSurface = p.pane,
+        error = p.ink,
+        onError = p.pane,
+        errorContainer = p.ink,
+        onErrorContainer = p.pane,
+        outline = p.ink,
+        outlineVariant = p.faint,
+        scrim = p.scrim.copy(alpha = 1f),
+        surfaceBright = p.hover,
+        surfaceContainer = p.pane,
+        surfaceContainerHigh = p.pane,
+        surfaceContainerHighest = p.pane,
+        surfaceContainerLow = p.pane,
+        surfaceContainerLowest = p.pane,
+        surfaceDim = p.well,
     )
-
-val darkScheme =
-    darkColorScheme(
-        primary = ColorDark.primaryDark,
-        onPrimary = ColorDark.onPrimaryDark,
-        primaryContainer = ColorDark.primaryContainerDark,
-        onPrimaryContainer = ColorDark.onPrimaryContainerDark,
-        secondary = ColorDark.secondaryDark,
-        onSecondary = ColorDark.onSecondaryDark,
-        secondaryContainer = ColorDark.secondaryContainerDark,
-        onSecondaryContainer = ColorDark.onSecondaryContainerDark,
-        tertiary = ColorDark.tertiaryDark,
-        onTertiary = ColorDark.onTertiaryDark,
-        tertiaryContainer = ColorDark.tertiaryContainerDark,
-        onTertiaryContainer = ColorDark.onTertiaryContainerDark,
-        error = ColorDark.errorDark,
-        onError = ColorDark.onErrorDark,
-        errorContainer = ColorDark.errorContainerDark,
-        onErrorContainer = ColorDark.onErrorContainerDark,
-        background = ColorDark.backgroundDark,
-        onBackground = ColorDark.onBackgroundDark,
-        surface = ColorDark.surfaceDark,
-        onSurface = ColorDark.onSurfaceDark,
-        surfaceVariant = ColorDark.surfaceVariantDark,
-        onSurfaceVariant = ColorDark.onSurfaceVariantDark,
-        outline = ColorDark.outlineDark,
-        outlineVariant = ColorDark.outlineVariantDark,
-        scrim = ColorDark.scrimDark,
-        inverseSurface = ColorDark.inverseSurfaceDark,
-        inverseOnSurface = ColorDark.inverseOnSurfaceDark,
-        inversePrimary = ColorDark.inversePrimaryDark,
-        surfaceDim = ColorDark.surfaceDimDark,
-        surfaceBright = ColorDark.surfaceBrightDark,
-        surfaceContainerLowest = ColorDark.surfaceContainerLowestDark,
-        surfaceContainerLow = ColorDark.surfaceContainerLowDark,
-        surfaceContainer = ColorDark.surfaceContainerDark,
-        surfaceContainerHigh = ColorDark.surfaceContainerHighDark,
-        surfaceContainerHighest = ColorDark.surfaceContainerHighestDark,
-    )
+}
