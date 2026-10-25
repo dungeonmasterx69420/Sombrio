@@ -46,9 +46,8 @@ class BaseApplication : Application(), Configuration.Provider, SingletonImageLoa
             Timber.plant(Timber.DebugTree())
         }
 
-        // Also from Android 12, where the setting is kept by the system once changed: System S is
-        // dark
-        // by default, which the system doesn't know until the theme is changed.
+        // Also from Android 12, where the system keeps the setting once it's changed: System S is
+        // dark by default, which the system doesn't know until the theme is changed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val mode =
                 when (appPreferences.getValue(appPreferences.theme)) {
