@@ -57,8 +57,9 @@ sed -i -E \
   -e "s/(id \"com\.android\.library\" version )\"[^\"]*\"/\1\"$agp\"/" \
   -e "s/(id \"org\.jetbrains\.kotlin\.android\" version )\"[^\"]*\"/\1\"$kotlin\"/" \
   "$android/settings.gradle"
-# Flags of the newer Android Gradle plugin
-sed -i '/^android\.newDsl=/d; /^android\.builtInKotlin=/d' "$android/gradle.properties"
+# Its Gradle properties too: some plugins use their dependencies' resources through their own R class, which needs R
+# classes to be transitive.
+cp "$app/android/gradle.properties" "$android/gradle.properties"
 cat >> "$android/build.gradle" <<'GRADLE'
 
 // Added by Sombrio's music/build-module.sh, as in sombrAMP's android/build.gradle: some plugins compile against Android
@@ -77,7 +78,16 @@ GRADLE
 grep -q "version \"$agp\"" "$android/settings.gradle" || { echo "Couldn't set the Android Gradle plugin version" >&2; exit 1; }
 # Newer than pubspec.yaml, so that Flutter doesn't generate it again
 touch "$android"
+
 # SOMBRIO tells sombrAMP it runs inside Sombrio (see lib/sombra/sombrio_host.dart). Only the release AAR is built: the
-# debug builds of Sombrio use it too.
-flutter build aar --no-pub --no-debug --no-profile --dart-define=SOMBRIO=true \
-  --target-platform android-arm,android-arm64,android-x64
+# debug builds of Sombrio use it too. When Gradle fails, Flutter only says so, so the output is kept and its errors
+# shown.
+log="$module/build-aar.log"
+if ! flutter build aar --verbose --no-pub --no-debug --no-profile --dart-define=SOMBRIO=true \
+  --target-platform android-arm,android-arm64,android-x64 > "$log" 2>&1; then
+  grep -E -A 25 "What went wrong|^e: |error:|FAILURE:" "$log" | head -400 >&2 || true
+  tail -n 60 "$log" >&2
+  echo "Building sombrAMP failed, see $log" >&2
+  exit 1
+fi
+tail -n 20 "$log"
