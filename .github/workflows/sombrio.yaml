@@ -120,6 +120,25 @@ jobs:
           done
           ls -l apks
 
+      # Each APK has the Music tab: the Flutter engine, sombrAMP compiled for its ABI and its assets, and the activity
+      # it runs in.
+      - name: Check the APKs
+        run: |
+          aapt2="$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | sort -V | tail -n 1)"
+          for apk in apks/*.apk; do
+            abi="$(grep -oE '(armeabi-v7a|arm64-v8a|x86_64)\.apk$' <<< "$apk")"
+            abi="${abi%.apk}"
+            files="$(unzip -Z1 "$apk")"
+            for file in "lib/$abi/libflutter.so" "lib/$abi/libapp.so" assets/flutter_assets/; do
+              grep -q "^$file" <<< "$files" || { echo "::error::$apk has no $file"; exit 1; }
+            done
+            manifest="$("$aapt2" dump xmltree --file AndroidManifest.xml "$apk")"
+            grep -q "wtf.sombra.sombrio.music.MusicActivity" <<< "$manifest" ||
+              { echo "::error::$apk has no MusicActivity"; exit 1; }
+            badging="$("$aapt2" dump badging "$apk")"
+            echo "$abi: ${badging%%$'\n'*}"
+          done
+
       - uses: actions/upload-artifact@v6
         with:
           name: sombrio-android
