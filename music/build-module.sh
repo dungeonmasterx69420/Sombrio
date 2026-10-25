@@ -53,28 +53,13 @@ android="$module/.android"
 cp "$app/android/gradle/wrapper/gradle-wrapper.properties" "$android/gradle/wrapper/gradle-wrapper.properties"
 agp="$(sed -n -E 's/.*id "com\.android\.application" version .([0-9.]+).*/\1/p' "$app/android/settings.gradle")"
 kotlin="$(sed -n -E 's/.*id "org\.jetbrains\.kotlin\.android" version .([0-9.]+).*/\1/p' "$app/android/settings.gradle")"
-sed -i -E "s/(id \"com\.android\.library\" version )\"[^\"]*\"/\1\"$agp\"/" "$android/settings.gradle"
-# The Kotlin Gradle plugin goes on the root project's classpath, which every plugin's build script inherits, so that
-# plugins asking for an old one in their own build script (like dynamic_color's 1.5) are compiled with the app's, as in
-# the app.
-sed -i '/id "org\.jetbrains\.kotlin\.android" version/d' "$android/settings.gradle"
-{
-  cat <<GRADLE
-// Added by Sombrio's music/build-module.sh, see there
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin"
-    }
-}
-
-GRADLE
-  cat "$android/build.gradle"
-} > "$android/build.gradle.new"
-mv "$android/build.gradle.new" "$android/build.gradle"
+# Kotlin goes in the same plugins block as Flutter's plugin loader, which brings its own, older Kotlin Gradle plugin:
+# there Gradle picks the newer of the two, and every plugin is compiled with it, also those asking for an older one in
+# their own build script. Declared anywhere else, Flutter's would win.
+sed -i -E \
+  -e "s/(id \"com\.android\.library\" version )\"[^\"]*\"/\1\"$agp\"/" \
+  -e "s/(id \"org\.jetbrains\.kotlin\.android\" version )\"[^\"]*\"/\1\"$kotlin\"/" \
+  "$android/settings.gradle"
 # Its Gradle properties too: some plugins use their dependencies' resources through their own R class, which needs R
 # classes to be transitive.
 cp "$app/android/gradle.properties" "$android/gradle.properties"
@@ -93,7 +78,10 @@ subprojects {
     }
 }
 GRADLE
-grep -q "version \"$agp\"" "$android/settings.gradle" || { echo "Couldn't set the Android Gradle plugin version" >&2; exit 1; }
+grep -q "id \"com\.android\.library\" version \"$agp\"" "$android/settings.gradle" ||
+  { echo "Couldn't set the Android Gradle plugin version" >&2; exit 1; }
+grep -q "id \"org\.jetbrains\.kotlin\.android\" version \"$kotlin\"" "$android/settings.gradle" ||
+  { echo "Couldn't set the Kotlin version" >&2; exit 1; }
 # Newer than pubspec.yaml, so that Flutter doesn't generate it again
 touch "$android"
 
