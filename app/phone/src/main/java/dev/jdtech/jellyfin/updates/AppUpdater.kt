@@ -73,9 +73,7 @@ object AppUpdater {
         val apks =
             (0 until assets.length())
                 .map { assets.getJSONObject(it) }
-                .filter {
-                    it.optString("name").endsWith(".apk")
-                }
+                .filter { it.optString("name").endsWith(".apk") }
         // The APK for the first ABI the device supports
         val apk =
             abis.firstNotNullOfOrNull { abi ->

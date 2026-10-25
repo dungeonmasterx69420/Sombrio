@@ -53,10 +53,28 @@ android="$module/.android"
 cp "$app/android/gradle/wrapper/gradle-wrapper.properties" "$android/gradle/wrapper/gradle-wrapper.properties"
 agp="$(sed -n -E 's/.*id "com\.android\.application" version .([0-9.]+).*/\1/p' "$app/android/settings.gradle")"
 kotlin="$(sed -n -E 's/.*id "org\.jetbrains\.kotlin\.android" version .([0-9.]+).*/\1/p' "$app/android/settings.gradle")"
-sed -i -E \
-  -e "s/(id \"com\.android\.library\" version )\"[^\"]*\"/\1\"$agp\"/" \
-  -e "s/(id \"org\.jetbrains\.kotlin\.android\" version )\"[^\"]*\"/\1\"$kotlin\"/" \
-  "$android/settings.gradle"
+sed -i -E "s/(id \"com\.android\.library\" version )\"[^\"]*\"/\1\"$agp\"/" "$android/settings.gradle"
+# The Kotlin Gradle plugin goes on the root project's classpath, which every plugin's build script inherits, so that
+# plugins asking for an old one in their own build script (like dynamic_color's 1.5) are compiled with the app's, as in
+# the app.
+sed -i '/id "org\.jetbrains\.kotlin\.android" version/d' "$android/settings.gradle"
+{
+  cat <<GRADLE
+// Added by Sombrio's music/build-module.sh, see there
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin"
+    }
+}
+
+GRADLE
+  cat "$android/build.gradle"
+} > "$android/build.gradle.new"
+mv "$android/build.gradle.new" "$android/build.gradle"
 # Its Gradle properties too: some plugins use their dependencies' resources through their own R class, which needs R
 # classes to be transitive.
 cp "$app/android/gradle.properties" "$android/gradle.properties"
