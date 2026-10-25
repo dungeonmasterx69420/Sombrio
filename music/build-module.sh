@@ -45,7 +45,39 @@ awk '
 
 cd "$module"
 flutter pub get
+
+# Flutter generates the module's Android project (.android) with its own Gradle and Android Gradle plugin, newer than
+# the ones sombrAMP's Android app is built with, and some of sombrAMP's plugins don't build with those. So the module is
+# built with the app's, and with its fix for plugins that compile against old Android SDKs.
+android="$module/.android"
+cp "$app/android/gradle/wrapper/gradle-wrapper.properties" "$android/gradle/wrapper/gradle-wrapper.properties"
+agp="$(sed -n -E 's/.*id "com\.android\.application" version .([0-9.]+).*/\1/p' "$app/android/settings.gradle")"
+kotlin="$(sed -n -E 's/.*id "org\.jetbrains\.kotlin\.android" version .([0-9.]+).*/\1/p' "$app/android/settings.gradle")"
+sed -i -E \
+  -e "s/(id \"com\.android\.library\" version )\"[^\"]*\"/\1\"$agp\"/" \
+  -e "s/(id \"org\.jetbrains\.kotlin\.android\" version )\"[^\"]*\"/\1\"$kotlin\"/" \
+  "$android/settings.gradle"
+# Flags of the newer Android Gradle plugin
+sed -i '/^android\.newDsl=/d; /^android\.builtInKotlin=/d' "$android/gradle.properties"
+cat >> "$android/build.gradle" <<'GRADLE'
+
+// Added by Sombrio's music/build-module.sh, as in sombrAMP's android/build.gradle: some plugins compile against Android
+// SDKs older than their dependencies need.
+subprojects {
+    afterEvaluate { project ->
+        if (project.plugins.hasPlugin("com.android.application") ||
+                project.plugins.hasPlugin("com.android.library")) {
+            project.android {
+                compileSdkVersion 36
+            }
+        }
+    }
+}
+GRADLE
+grep -q "version \"$agp\"" "$android/settings.gradle" || { echo "Couldn't set the Android Gradle plugin version" >&2; exit 1; }
+# Newer than pubspec.yaml, so that Flutter doesn't generate it again
+touch "$android"
 # SOMBRIO tells sombrAMP it runs inside Sombrio (see lib/sombra/sombrio_host.dart). Only the release AAR is built: the
 # debug builds of Sombrio use it too.
-flutter build aar --no-debug --no-profile --dart-define=SOMBRIO=true \
+flutter build aar --no-pub --no-debug --no-profile --dart-define=SOMBRIO=true \
   --target-platform android-arm,android-arm64,android-x64
