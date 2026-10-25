@@ -1,7 +1,9 @@
-This privacy policy pertains the Findroid app.
+This privacy policy pertains to the Sombrio app.
 
-Findroid does not collect or access any personal information. No identifying information or user data of any kind is made available to third-parties.
+Sombrio does not collect any personal information. It connects to the media servers you sign in to (Jellyfin, or for
+music also Navidrome and other Subsonic servers), to GitHub to look for newer builds of the app, and, when your server
+has no lyrics for a song, to LRCLIB (lrclib.net), which it sends the song's title, artist, album and length. Looking up
+lyrics on LRCLIB can be turned off in the music player's settings (Layout & Theme, Lyrics). No identifying information or
+user data of any kind is made available to anyone else.
 
-This Privacy Policy is effective as of Feb 8th, 2023 and will remain in effect except with respect to any changes in its provisions in the future, which will be in effect immediately after being posted on this page. We reserve the right to update or change our Privacy Policy at any time and you should check this Privacy Policy periodically. Your continued use of the Service after we post any modifications to the Privacy Policy on this page will constitute your acknowledgment of the modifications and your consent to abide and be bound by the modified Privacy Policy.
-
-Findroid is published by Jarne Demeulemeester. Inquiries can be submitted to jarnedemeulemeester@gmail.com.
+Sombrio is built on Findroid, by Jarne Demeulemeester, and sombrAMP, which is built on Finamp.

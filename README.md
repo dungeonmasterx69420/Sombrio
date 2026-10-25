@@ -1,76 +1,110 @@
-![Findroid banner](images/findroid-banner.png)
+<div align="center">
+  <img src="images/sombrio_icon.png" alt="The sombra S mark" width="128">
 
-# Findroid
-![GitHub release (with filter)](https://img.shields.io/github/v/release/jarnedemeulemeester/findroid?style=for-the-badge)
-![GitHub repo stars](https://img.shields.io/github/stars/jarnedemeulemeester/findroid?style=for-the-badge)
-![GitHub issues](https://img.shields.io/github/issues/jarnedemeulemeester/findroid?style=for-the-badge)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/jarnedemeulemeester/findroid?style=for-the-badge)
-![GitHub all releases](https://img.shields.io/github/downloads/jarnedemeulemeester/findroid/total?style=for-the-badge)
-![GitHub](https://img.shields.io/github/license/jarnedemeulemeester/findroid?style=for-the-badge)
+  <h1>Sombrio</h1>
 
-Findroid is third-party Android application for Jellyfin that provides a native user interface to browse and play movies and series.
+  Films, shows and music from your own Jellyfin server, in one app, by <a href="https://sombra.wtf">sombra</a>.
+  Built on <a href="https://github.com/jarnedemeulemeester/findroid">Findroid</a> and
+  <a href="https://github.com/dungeonmasterx69420/sombrAMP">sombrAMP</a>.
+</div>
 
-Findroid requires Jellyfin server version 12.0 or higher.
+## What it is
 
-I am developing this application in my spare time.
+Sombrio is two Sombra apps in one Android app:
 
-**This project is in its early stages so expect bugs.**
+- **Films and shows**: Findroid, the native Jellyfin client, redesigned in **System S**, the design system behind
+  [sombra.wtf](https://sombra.wtf). Browse your libraries, play with ExoPlayer or mpv, download for offline, with
+  trickplay, chapters, media segments (skip intro) and picture-in-picture.
+- **Music**: [sombrAMP](https://github.com/dungeonmasterx69420/sombrAMP), sombra's music player for Jellyfin and
+  Navidrome, behind the **Music** tab. It's the whole of sombrAMP: gapless playback, downloads, lyrics, Android Auto,
+  and its own Layout & Theme settings.
 
-[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="80">](https://play.google.com/store/apps/details?id=dev.jdtech.jellyfin)
-[<img src="https://user-images.githubusercontent.com/32322857/219019331-027a6775-7362-44bb-a026-281f71e9b37b.png" alt="Available at Amazon Appstore" height="80">](https://www.amazon.com/gp/product/B0BTWC8DNZ)
-[<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/dev.jdtech.jellyfin)
-[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" height="80">](https://apt.izzysoft.de/fdroid/index/apk/dev.jdtech.jellyfin)
+Both sides look the same: ink on black (dark is the default) or on paper white, hard edges, extruded window shadows,
+Pixelify Sans and IBM Plex Mono, and one phosphor colour that marks whatever is live.
 
-## Screenshots
-| Home                                | Library                             | Movie                           | Season                            | Episode                             |
-|-------------------------------------|-------------------------------------|---------------------------------|-----------------------------------|-------------------------------------|
-| ![Home](fastlane/metadata/android/en-US/images/phoneScreenshots/1_en-US.png) | ![Library](fastlane/metadata/android/en-US/images/phoneScreenshots/2_en-US.png) | ![Movie](fastlane/metadata/android/en-US/images/phoneScreenshots/3_en-US.png) | ![Season](fastlane/metadata/android/en-US/images/phoneScreenshots/4_en-US.png) | ![Episode](fastlane/metadata/android/en-US/images/phoneScreenshots/5_en-US.png) |
+> [!IMPORTANT]
+> You **need** access to a [Jellyfin](https://jellyfin.org) server. Music can also come from a
+> [Navidrome](https://www.navidrome.org) or other Subsonic server. Sombrio plays your own media and doesn't connect to
+> any streaming service.
 
-## Features
-- Completely native interface
-- Supported media items: movies, series, seasons, episodes 
-  - Direct play only, (no transcoding)
-- Offline playback / downloads
-- ExoPlayer
-  - Video codecs: H.263, H.264, H.265, VP8, VP9, AV1 
-    - Support depends on Android device
-  - Audio codecs: Vorbis, Opus, FLAC, ALAC, PCM, MP3, AAC, AC-3, E-AC-3, DTS, DTS-HD, TrueHD 
-    - Support provided by ExoPlayer FFmpeg extension
-  - Subtitle codecs: SRT, VTT, SSA/ASS, PGSSUB
-    - SSA/ASS has limited styling support see [this issue](https://github.com/google/ExoPlayer/issues/8435)
-- mpv
-  - Container formats: mkv, mov, mp4, avi
-  - Video codecs: H.264, H.265, H.266, VP8, VP9, AV1
-  - Audio codecs: Opus, FLAC, MP3, AAC, AC-3, E-AC-3, TrueHD, DTS, DTS-HD
-  - Subtitle codecs: SRT, VTT, SSA/ASS, DVDSUB
-  - Optionally force software decoding when hardware decoding has issues.
-- Picture-in-picture mode
-- Media chapters
-  - Timeline markers
-  - Chapter navigation gestures
-- Trickplay
-- Media segments
-  - Skip button
-  - Auto skip
+### One sign-in
 
-## Planned features
-- Android TV
-- Websocket connection (Syncplay)
-- Chromecast support
+Sign in to your Jellyfin server once, in Sombrio. The first time you open the Music tab, sombrAMP offers to **continue
+as** that account: Sombrio approves a Quick Connect request for it, so the music player gets its own session without
+asking for your password (Quick Connect has to be enabled on the server, which it is by default). Signing out of one
+doesn't sign out the other. To use another server for music, like Navidrome, choose **Use another server** instead.
 
-## Translating
-[JDTech Weblate](https://weblate.jdtech.dev) is a self-hosted instance of Weblate where you can translate this project and future projects of mine.
+## Downloads
 
-## Questions?
-We have a [Discord server](https://discord.gg/tg5VvTFwTV) to discuss future development or ask general questions.
+The **Sombrio builds** workflow (`.github/workflows/sombrio.yaml`) builds the app on every push and attaches one APK
+per processor type to the run, on the repository's Actions tab. Most phones want **arm64-v8a**; older ones
+armeabi-v7a, and emulators x86_64.
 
-## License
-This project is licensed under [GPLv3](LICENSE).
+Builds of `main` are also published on the [Releases](https://github.com/dungeonmasterx69420/Sombrio/releases) page,
+which needs no GitHub account. Once installed, Sombrio offers newer releases itself, on startup and in Settings → About
+→ Check for updates: it downloads the right APK and opens Android's installer, which updates the app in place.
 
-The logo is a combination of the Jellyfin logo and the Android robot.
+Releases need the `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` and
+`ANDROID_KEY_PASSWORD` repository secrets, so that every APK is signed with the same key; without them, each build gets
+a throwaway key (uninstall before installing another build) and nothing is released. The same key as sombrAMP's works
+too.
 
-The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.
+Sombrio's app ID is `wtf.sombra.sombrio`, so it installs next to Findroid and sombrAMP.
 
-Android is a trademark of Google LLC.
+## The design
 
-Google Play and the Google Play logo are trademarks of Google LLC.
+Everything comes from System S, as in sombrAMP; nothing in the look is new to this app.
+
+- **Colour.** Ink, pane and desk greys for everything, plus one phosphor (amber by default; green, cyan and pink in
+  Settings → Appearance → Phosphor) for what is live: playback progress, downloads, what you've watched and liked,
+  loading and focus. The names under posters are drawn in it too. System S has no red: problems are shown inverted.
+- **Type.** Pixelify Sans for titles, buttons and labels; IBM Plex Mono for text and figures. Both are bundled under
+  the SIL Open Font License (`core/src/main/res/font`, licences in `core/src/main/assets/fonts`).
+- **Posters.** Artwork keeps its full colour, framed square on a pane with a 1dp ink edge.
+- **Windows.** Home's suggestions, settings groups and the sign-in are System S windows: a pinstriped title bar and
+  the extruded shadow. Home's header is a menu bar with the S mark; dialogs have the alert's deep shadow and inner
+  ring.
+- **Buttons** invert while pressed; the default one of a group, like Play, has the outer ring.
+
+The System S port lives in `core/src/main/java/dev/jdtech/jellyfin/core/presentation/theme/SystemS.kt` (tokens) and
+`app/phone/src/main/java/dev/jdtech/jellyfin/presentation/components/SystemS.kt` and `presentation/theme`
+(Compose theme and widgets). The music side's is sombrAMP's own `lib/sombra`.
+
+## How it's put together
+
+Findroid is a Kotlin app and sombrAMP a Flutter app, so sombrAMP is built as a Flutter module, an Android library:
+
+- `music/sombrAMP` is sombrAMP, as a git submodule.
+- `music/build-module.sh` builds it as a Flutter module, with `--dart-define=SOMBRIO=true`, into a Maven repository in
+  `music/module`.
+- The `:music` module (`music/src`) holds `MusicActivity`, which the Music tab opens and sombrAMP runs in, and what
+  sombrAMP's own Android app declares around it: the audio service (playback and Android Auto), the cover art
+  provider and the notification icons. It also answers sombrAMP's questions about Sombrio's account.
+
+Without the built module, Gradle leaves `:music` out and Sombrio builds without the Music tab;
+`-Psombrio.music=required` makes that an error, as in CI.
+
+## Building
+
+You need the Android SDK and Flutter (the version in `FLUTTER_VERSION` of `.github/workflows/sombrio.yaml`):
+
+```sh
+git submodule update --init
+music/build-module.sh
+./gradlew :app:phone:assembleLibreDebug
+```
+
+To update sombrAMP, check out a newer commit in `music/sombrAMP` and commit the submodule.
+
+## What hasn't changed
+
+To keep merging upstream changes painless, the internals still carry Findroid's names: the Kotlin packages are
+`dev.jdtech.jellyfin` and the theme is `FindroidTheme`. Inside, sombrAMP still carries Finamp's. The Android TV app
+(`app/tv`) is Findroid's and isn't part of Sombrio's builds.
+
+## Credits and licence
+
+Sombrio is built on [Findroid](https://github.com/jarnedemeulemeester/findroid), the native Jellyfin app by Jarne
+Demeulemeester and its contributors, licensed under the [GNU GPL v3](LICENSE), which Sombrio is too. Its music player
+is [sombrAMP](https://github.com/dungeonmasterx69420/sombrAMP), built on [Finamp](https://github.com/finamp-app/finamp)
+by the Finamp contributors, under the Mozilla Public License 2.0. Both play from [Jellyfin](https://jellyfin.org).

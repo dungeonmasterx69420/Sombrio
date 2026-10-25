@@ -1,7 +1,6 @@
 package dev.jdtech.jellyfin.presentation.settings
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,9 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +29,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -41,6 +42,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
@@ -48,11 +50,18 @@ import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import dev.jdtech.jellyfin.BuildConfig
 import dev.jdtech.jellyfin.R
 import dev.jdtech.jellyfin.core.R as CoreR
+import dev.jdtech.jellyfin.presentation.components.SombraMark
+import dev.jdtech.jellyfin.presentation.components.SystemSButton
 import dev.jdtech.jellyfin.presentation.components.SystemSDefaults
 import dev.jdtech.jellyfin.presentation.components.systemSMenuBar
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
+import dev.jdtech.jellyfin.presentation.theme.systemS
 import dev.jdtech.jellyfin.settings.R as SettingsR
+import dev.jdtech.jellyfin.updates.AppUpdate
+import dev.jdtech.jellyfin.updates.AppUpdateDialog
+import dev.jdtech.jellyfin.updates.AppUpdater
+import kotlinx.coroutines.launch
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,6 +82,10 @@ fun AboutScreen(navigateBack: () -> Unit) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     val libraries by produceLibraries(R.raw.aboutlibraries)
+
+    val scope = rememberCoroutineScope()
+    var update by remember { mutableStateOf<AppUpdate?>(null) }
+    update?.let { AppUpdateDialog(update = it, onDismiss = { update = null }) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -112,72 +125,95 @@ fun AboutScreen(navigateBack: () -> Unit) {
                                 Modifier.padding(horizontal = MaterialTheme.spacings.default),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            Spacer(Modifier.height(MaterialTheme.spacings.small))
-                            Image(
-                                painter = painterResource(CoreR.drawable.ic_banner),
-                                contentDescription = null,
-                                modifier = Modifier.width(240.dp),
-                            )
+                            Spacer(Modifier.height(MaterialTheme.spacings.medium))
+                            SombraMark(height = 72.dp)
                             Spacer(Modifier.height(MaterialTheme.spacings.medium))
                             Text(
+                                text = stringResource(CoreR.string.app_name),
+                                style = MaterialTheme.typography.headlineSmall,
+                            )
+                            Text(
                                 text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
-                                style = MaterialTheme.typography.bodyLarge,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.systemS.palette.muted,
                             )
                             Spacer(Modifier.height(MaterialTheme.spacings.small))
                             Text(
                                 text = stringResource(CoreR.string.app_description),
                                 style = MaterialTheme.typography.bodyMedium,
+                                textAlign = TextAlign.Center,
                             )
-                            Spacer(Modifier.height(MaterialTheme.spacings.medium))
-                            HorizontalDivider()
+                            Spacer(Modifier.height(MaterialTheme.spacings.small))
+                            Text(
+                                text = stringResource(CoreR.string.about_built_on),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.systemS.palette.muted,
+                                textAlign = TextAlign.Center,
+                            )
                             Spacer(Modifier.height(MaterialTheme.spacings.medium))
                             Row(
                                 horizontalArrangement =
                                     Arrangement.spacedBy(MaterialTheme.spacings.small)
                             ) {
-                                FilledTonalIconButton(
+                                listOf(
+                                        CoreR.string.about_source_code to SOMBRIO_SOURCE,
+                                        CoreR.string.about_findroid to FINDROID_SOURCE,
+                                        CoreR.string.about_sombramp to SOMBRAMP_SOURCE,
+                                    )
+                                    .forEach { (label, uri) ->
+                                        SystemSButton(
+                                            onClick = {
+                                                try {
+                                                    uriHandler.openUri(uri)
+                                                } catch (e: IllegalArgumentException) {
+                                                    Toast.makeText(
+                                                            context,
+                                                            e.localizedMessage,
+                                                            Toast.LENGTH_SHORT,
+                                                        )
+                                                        .show()
+                                                }
+                                            },
+                                            contentPadding = PaddingValues(horizontal = 12.dp),
+                                        ) {
+                                            Text(text = stringResource(label))
+                                        }
+                                    }
+                            }
+                            if (AppUpdater.isSupported) {
+                                Spacer(Modifier.height(MaterialTheme.spacings.small))
+                                SystemSButton(
                                     onClick = {
-                                        try {
-                                            uriHandler.openUri(
-                                                "https://github.com/jarnedemeulemeester/findroid"
-                                            )
-                                        } catch (e: IllegalArgumentException) {
-                                            Toast.makeText(
-                                                    context,
-                                                    e.localizedMessage,
-                                                    Toast.LENGTH_SHORT,
-                                                )
-                                                .show()
+                                        scope.launch {
+                                            try {
+                                                update = AppUpdater.findUpdate()
+                                                if (update == null) {
+                                                    Toast.makeText(
+                                                            context,
+                                                            CoreR.string.app_update_up_to_date,
+                                                            Toast.LENGTH_SHORT,
+                                                        )
+                                                        .show()
+                                                }
+                                            } catch (e: Exception) {
+                                                Toast.makeText(
+                                                        context,
+                                                        context.getString(
+                                                            CoreR.string.app_update_failed,
+                                                            e.localizedMessage ?: e.toString(),
+                                                        ),
+                                                        Toast.LENGTH_LONG,
+                                                    )
+                                                    .show()
+                                            }
                                         }
                                     }
                                 ) {
-                                    Icon(
-                                        painter = painterResource(CoreR.drawable.ic_github),
-                                        contentDescription = null,
-                                    )
-                                }
-                                FilledTonalIconButton(
-                                    onClick = {
-                                        try {
-                                            uriHandler.openUri(
-                                                "https://ko-fi.com/jarnedemeulemeester"
-                                            )
-                                        } catch (e: IllegalArgumentException) {
-                                            Toast.makeText(
-                                                    context,
-                                                    e.localizedMessage,
-                                                    Toast.LENGTH_SHORT,
-                                                )
-                                                .show()
-                                        }
-                                    }
-                                ) {
-                                    Icon(
-                                        painter = painterResource(CoreR.drawable.ic_coffee),
-                                        contentDescription = null,
-                                    )
+                                    Text(text = stringResource(CoreR.string.app_update_check))
                                 }
                             }
+                            Spacer(Modifier.height(MaterialTheme.spacings.medium))
+                            HorizontalDivider(color = MaterialTheme.systemS.palette.faint)
                             Spacer(Modifier.height(MaterialTheme.spacings.small))
                         }
                     }
@@ -186,6 +222,10 @@ fun AboutScreen(navigateBack: () -> Unit) {
         )
     }
 }
+
+private const val SOMBRIO_SOURCE = "https://github.com/dungeonmasterx69420/Sombrio"
+private const val FINDROID_SOURCE = "https://github.com/jarnedemeulemeester/findroid"
+private const val SOMBRAMP_SOURCE = "https://github.com/dungeonmasterx69420/sombrAMP"
 
 @Composable
 @PreviewScreenSizes
