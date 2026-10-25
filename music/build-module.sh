@@ -31,9 +31,12 @@ for path in lib assets images pubspec.yaml pubspec.lock l10n.yaml build.yaml ana
   cp -R "$app/$path" "$module/"
 done
 
-# A module is an app whose pubspec says so.
+# A module is an app whose pubspec says so. It leaves out integration_test, which the module's plugin registrant would
+# register although release builds don't include it, so they wouldn't compile.
 awk '
-  { print }
+  /^  integration_test:/ { skip = 1; next }
+  skip && /^    / { next }
+  { skip = 0; print }
   /^flutter:[[:space:]]*$/ && !done {
     print "  module:"
     print "    androidX: true"
