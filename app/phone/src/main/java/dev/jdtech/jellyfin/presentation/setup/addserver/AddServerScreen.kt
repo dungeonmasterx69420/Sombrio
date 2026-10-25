@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.jdtech.jellyfin.core.R as CoreR
+import dev.jdtech.jellyfin.presentation.components.SystemSDefaults
 import dev.jdtech.jellyfin.presentation.setup.components.DiscoveredServerItem
 import dev.jdtech.jellyfin.presentation.setup.components.LoadingButton
 import dev.jdtech.jellyfin.presentation.setup.components.RootLayout
@@ -131,6 +132,7 @@ private fun AddServerScreenLayout(state: AddServerState, onAction: (AddServerAct
             }
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
+                colors = SystemSDefaults.textFieldColors(),
                 value = serverAddress,
                 leadingIcon = {
                     Icon(

@@ -1,5 +1,6 @@
 package dev.jdtech.jellyfin.presentation.film.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -18,10 +19,15 @@ import androidx.compose.ui.unit.dp
 import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
+import dev.jdtech.jellyfin.presentation.theme.systemS
 
 @Composable
 fun FavoritesCard(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    OutlinedCard(onClick = onClick, modifier = modifier) {
+    OutlinedCard(
+        onClick = onClick,
+        modifier = modifier,
+        border = BorderStroke(1.dp, MaterialTheme.systemS.palette.ink),
+    ) {
         Row(
             modifier = Modifier.padding(MaterialTheme.spacings.medium),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.small),

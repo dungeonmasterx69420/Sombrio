@@ -30,6 +30,8 @@ import dev.jdtech.jellyfin.film.presentation.collection.CollectionViewModel
 import dev.jdtech.jellyfin.models.CollectionSection
 import dev.jdtech.jellyfin.models.FindroidItem
 import dev.jdtech.jellyfin.models.UiText
+import dev.jdtech.jellyfin.presentation.components.SystemSDefaults
+import dev.jdtech.jellyfin.presentation.components.systemSMenuBar
 import dev.jdtech.jellyfin.presentation.film.components.CollectionGrid
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import java.util.UUID
@@ -74,6 +76,8 @@ fun CollectionScreenLayout(
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
+                colors = SystemSDefaults.topAppBarColors(),
+                modifier = Modifier.systemSMenuBar(),
                 title = { Text(collectionName) },
                 navigationIcon = {
                     IconButton(onClick = { onAction(CollectionAction.OnBackClick) }) {

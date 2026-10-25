@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import dev.jdtech.jellyfin.presentation.components.BaseDialog
+import dev.jdtech.jellyfin.presentation.components.SystemSDefaults
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.settings.R as SettingsR
@@ -96,7 +97,11 @@ private fun SettingsMultiSelectDialogItem(
                 .padding(horizontal = MaterialTheme.spacings.default),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Checkbox(checked = checked, onCheckedChange = { _ -> onCheckedChange(option.first) })
+        Checkbox(
+            colors = SystemSDefaults.checkboxColors(),
+            checked = checked,
+            onCheckedChange = { _ -> onCheckedChange(option.first) },
+        )
         Spacer(modifier = Modifier.width(MaterialTheme.spacings.medium))
         Text(text = option.second, color = MaterialTheme.colorScheme.onSurface)
     }

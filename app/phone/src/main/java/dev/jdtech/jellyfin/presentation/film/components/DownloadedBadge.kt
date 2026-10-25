@@ -11,14 +11,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.systemS
 
 @Composable
 fun DownloadedBadge(modifier: Modifier = Modifier) {
-    BaseBadge(modifier = modifier) {
+    BaseBadge(modifier = modifier, live = true) {
         Icon(
             painter = painterResource(CoreR.drawable.ic_download),
             contentDescription = "",
-            tint = MaterialTheme.colorScheme.onPrimary,
+            tint = MaterialTheme.systemS.onPhosphor,
             modifier = Modifier.size(16.dp).align(Alignment.Center),
         )
     }

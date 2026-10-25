@@ -1,20 +1,25 @@
 <resources>
+    <!-- sombra System S, dark: ink on black -->
     <style name="Theme.Findroid" parent="Base.Theme.Findroid">
-        <!-- Primary -->
-        <item name="colorPrimary">@color/primary_dark</item>
-        <item name="colorOnPrimary">@color/on_primary_dark</item>
-        <item name="colorPrimaryContainer">@color/primary_container_dark</item>
-        <item name="colorOnPrimaryContainer">@color/on_primary_container_dark</item>
+        <item name="colorPrimary">@color/system_s_ink_dark</item>
+        <item name="colorOnPrimary">@color/system_s_pane_dark</item>
+        <item name="colorPrimaryContainer">@color/system_s_hover_dark</item>
+        <item name="colorOnPrimaryContainer">@color/system_s_ink_dark</item>
 
-        <!-- Secondary -->
-        <item name="colorSecondary">@color/secondary_dark</item>
-        <item name="colorOnSecondary">@color/on_secondary_dark</item>
-        <item name="colorSecondaryContainer">@color/secondary_container_dark</item>
-        <item name="colorOnSecondaryContainer">@color/on_secondary_container_dark</item>
+        <item name="colorSecondary">@color/system_s_phosphor</item>
+        <item name="colorOnSecondary">@color/system_s_on_phosphor</item>
+        <item name="colorSecondaryContainer">@color/system_s_ink_dark</item>
+        <item name="colorOnSecondaryContainer">@color/system_s_pane_dark</item>
 
-        <!-- Surface -->
-        <item name="android:colorBackground">@color/neutral_1000</item>
-        <item name="colorSurface">@color/neutral_900</item>
+        <item name="android:colorBackground">@color/system_s_desk_dark</item>
+        <item name="colorSurface">@color/system_s_pane_dark</item>
+        <item name="colorOnSurface">@color/system_s_ink_dark</item>
+        <item name="colorOnSurfaceVariant">@color/system_s_muted_dark</item>
+        <item name="colorOutline">@color/system_s_ink_dark</item>
+        <item name="colorOutlineVariant">@color/system_s_faint_dark</item>
+
+        <item name="colorError">@color/system_s_ink_dark</item>
+        <item name="colorOnError">@color/system_s_pane_dark</item>
     </style>
 
     <style name="ThemeOverlay.Findroid.Amoled" parent="">

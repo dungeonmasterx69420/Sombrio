@@ -81,14 +81,27 @@ constructor(private val appPreferences: AppPreferences, private val database: Se
                     }
                 }
 
+            val appearance =
+                combine(
+                    appPreferences.observe(appPreferences.theme),
+                    appPreferences.observe(appPreferences.phosphor),
+                    appPreferences.observe(appPreferences.amoled),
+                ) { theme, phosphor, amoled ->
+                    Appearance(theme = theme, phosphor = phosphor, isAmoled = amoled)
+                }
+
             combine(
                     setupFlags,
+                    appearance,
                     appPreferences.observe(appPreferences.dynamicColors),
                     appPreferences.observe(appPreferences.offlineMode),
-                ) { flags, dynamicColors, offlineMode ->
+                ) { flags, appearance, dynamicColors, offlineMode ->
                     MainState(
                         isLoading = false,
                         isDynamicColors = dynamicColors,
+                        theme = appearance.theme,
+                        phosphor = appearance.phosphor,
+                        isAmoled = appearance.isAmoled,
                         hasServers = flags.hasServers,
                         hasCurrentServer = flags.hasCurrentServer,
                         hasCurrentUser = flags.hasCurrentUser,
@@ -98,6 +111,8 @@ constructor(private val appPreferences: AppPreferences, private val database: Se
                 .collect { mainState -> _state.emit(mainState) }
         }
     }
+
+    private data class Appearance(val theme: String, val phosphor: String, val isAmoled: Boolean)
 
     private data class SetupFlags(
         val hasServers: Boolean,
@@ -109,6 +124,11 @@ constructor(private val appPreferences: AppPreferences, private val database: Se
 data class MainState(
     val isLoading: Boolean = true,
     val isDynamicColors: Boolean = true,
+    /** "dark", "light" or "system". */
+    val theme: String = "dark",
+    /** The System S phosphor: "amber", "green", "cyan" or "pink". */
+    val phosphor: String = "amber",
+    val isAmoled: Boolean = false,
     val hasServers: Boolean = false,
     val hasCurrentServer: Boolean = false,
     val hasCurrentUser: Boolean = false,

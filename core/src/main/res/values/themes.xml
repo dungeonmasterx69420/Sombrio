@@ -5,42 +5,58 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <!-- Base application theme. -->
+    <!-- Base application theme: sombra System S, light (paper white). The Compose screens draw their
+         own, see dev.jdtech.jellyfin.presentation.theme. This one is for the windows, the player and
+         its dialogs. -->
     <style name="Theme.Findroid" parent="Base.Theme.Findroid" />
 
     <style name="Base.Theme.Findroid" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Primary -->
-        <item name="colorPrimary">@color/primary_light</item>
-        <item name="colorOnPrimary">@android:color/white</item>
-        <item name="colorPrimaryContainer">@color/primary_container_light</item>
-        <item name="colorOnPrimaryContainer">@color/on_primary_container_light</item>
+        <!-- Controls are ink on pane -->
+        <item name="colorPrimary">@color/system_s_ink_light</item>
+        <item name="colorOnPrimary">@color/system_s_pane_light</item>
+        <item name="colorPrimaryContainer">@color/system_s_hover_light</item>
+        <item name="colorOnPrimaryContainer">@color/system_s_ink_light</item>
 
-        <!-- Secondary -->
-        <item name="colorSecondary">@color/secondary_light</item>
-        <item name="colorOnSecondary">@android:color/white</item>
-        <item name="colorSecondaryContainer">@color/secondary_container_light</item>
-        <item name="colorOnSecondaryContainer">@color/on_secondary_container_light</item>
+        <!-- The phosphor marks what is live -->
+        <item name="colorSecondary">@color/system_s_phosphor_ink_light</item>
+        <item name="colorOnSecondary">@color/system_s_on_phosphor</item>
+        <item name="colorSecondaryContainer">@color/system_s_ink_light</item>
+        <item name="colorOnSecondaryContainer">@color/system_s_pane_light</item>
 
         <!-- Surface -->
-        <item name="android:colorBackground">@color/neutral_50</item>
-        <item name="colorSurface">@color/neutral_100</item>
+        <item name="android:colorBackground">@color/system_s_desk_light</item>
+        <item name="colorSurface">@color/system_s_pane_light</item>
+        <item name="colorOnSurface">@color/system_s_ink_light</item>
+        <item name="colorOnSurfaceVariant">@color/system_s_muted_light</item>
+        <item name="colorOutline">@color/system_s_ink_light</item>
+        <item name="colorOutlineVariant">@color/system_s_faint_light</item>
         <item name="colorSurfaceContainer">?attr/colorSurface</item>
         <item name="colorSurfaceContainerLow">?attr/colorSurface</item>
         <item name="colorSurfaceContainerHigh">?attr/colorSurface</item>
+        <item name="colorSurfaceContainerHighest">?attr/colorSurface</item>
 
-        <!-- Error -->
-        <item name="colorError">@color/red</item>
-        <item name="colorOnError">@android:color/white</item>
+        <!-- System S has no red: problems are shown inverted -->
+        <item name="colorError">@color/system_s_ink_light</item>
+        <item name="colorOnError">@color/system_s_pane_light</item>
+
+        <!-- Type: IBM Plex Mono, with Pixelify Sans for titles and buttons -->
+        <item name="android:fontFamily">@font/ibm_plex_mono</item>
+        <item name="fontFamily">@font/ibm_plex_mono</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.Sombrio.Title</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.Sombrio.Title.Medium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Sombrio.Headline</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.Sombrio.Label</item>
 
         <!-- Status bar -->
-        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:statusBarColor">?android:colorBackground</item>
         <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
 
-        <!-- Shapes -->
-        <item name="shapeAppearanceCornerExtraSmall">
-            @style/ShapeAppearance.Findroid.Corner.ExtraSmall
-        </item>
+        <!-- Hard edges -->
+        <item name="shapeAppearanceCornerExtraSmall">@style/ShapeAppearance.Findroid.Corner.ExtraSmall</item>
         <item name="shapeAppearanceCornerSmall">@style/ShapeAppearance.Findroid.Corner.Small</item>
+        <item name="shapeAppearanceCornerMedium">@style/ShapeAppearance.Findroid.Corner.Small</item>
+        <item name="shapeAppearanceCornerLarge">@style/ShapeAppearance.Findroid.Corner.Small</item>
+        <item name="shapeAppearanceCornerExtraLarge">@style/ShapeAppearance.Findroid.Corner.Small</item>
 
         <!-- Toolbar -->
         <item name="toolbarStyle">@style/Widget.Material3.Toolbar.Surface</item>
@@ -52,6 +68,48 @@
         <!-- Extra -->
         <item name="elevationOverlayEnabled">false</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Material3.MaterialAlertDialog</item>
-        <item name="dialogCornerRadius">28dp</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Sombrio.Dialog</item>
+        <item name="dialogCornerRadius">0dp</item>
+    </style>
+
+    <!-- System S dialogs: a pane with a 1dp ink edge -->
+    <style name="ThemeOverlay.Sombrio.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="materialAlertDialogTitleTextStyle">@style/Sombrio.Dialog.Title</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Findroid.Corner.Small</item>
+        <item name="backgroundTint">?attr/colorSurface</item>
+    </style>
+
+    <style name="Sombrio.Dialog.Title" parent="MaterialAlertDialog.Material3.Title.Text">
+        <item name="android:textAppearance">@style/TextAppearance.Sombrio.Title</item>
+        <item name="fontFamily">@font/pixelify_sans</item>
+        <item name="android:fontFamily">@font/pixelify_sans</item>
+    </style>
+
+    <style name="TextAppearance.Sombrio.Title" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/pixelify_sans</item>
+        <item name="android:fontFamily">@font/pixelify_sans</item>
+        <item name="android:fontFeatureSettings">liga 0</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="TextAppearance.Sombrio.Title.Medium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">@font/pixelify_sans</item>
+        <item name="android:fontFamily">@font/pixelify_sans</item>
+        <item name="android:fontFeatureSettings">liga 0</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="TextAppearance.Sombrio.Headline" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">@font/pixelify_sans</item>
+        <item name="android:fontFamily">@font/pixelify_sans</item>
+        <item name="android:fontFeatureSettings">liga 0</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="TextAppearance.Sombrio.Label" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/pixelify_sans</item>
+        <item name="android:fontFamily">@font/pixelify_sans</item>
+        <item name="android:fontFeatureSettings">liga 0</item>
+        <item name="android:letterSpacing">0</item>
     </style>
 </resources>

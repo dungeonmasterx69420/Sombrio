@@ -36,6 +36,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.jdtech.jellyfin.core.R as CoreR
+import dev.jdtech.jellyfin.presentation.components.SystemSDefaults
+import dev.jdtech.jellyfin.presentation.components.systemSDialogFrame
+import dev.jdtech.jellyfin.presentation.components.systemSMenuBar
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.settings.R as SettingsR
 import dev.jdtech.jellyfin.settings.presentation.settings.SettingsFileEditAction
@@ -87,6 +90,8 @@ private fun SettingsFileEditScreenLayout(
         modifier = Modifier.imePadding(),
         topBar = {
             TopAppBar(
+                colors = SystemSDefaults.topAppBarColors(),
+                modifier = Modifier.systemSMenuBar(),
                 title = { Text(stringResource(SettingsR.string.edit_file_title, fileName)) },
                 navigationIcon = {
                     IconButton(
@@ -137,6 +142,7 @@ private fun SettingsFileEditScreenLayout(
 
     if (showDiscardDialog) {
         AlertDialog(
+            modifier = Modifier.systemSDialogFrame(),
             onDismissRequest = { showDiscardDialog = false },
             title = { Text(stringResource(SettingsR.string.discard_changes_dialog_title)) },
             text = { Text(stringResource(SettingsR.string.discard_changes_dialog_text)) },

@@ -19,13 +19,16 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import dev.jdtech.jellyfin.core.R as CoreR
+import dev.jdtech.jellyfin.presentation.components.systemSMenuBarTop
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
+import dev.jdtech.jellyfin.presentation.theme.systemS
 import dev.jdtech.jellyfin.setup.R as SetupR
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,7 +41,13 @@ fun ServerBottomSheet(
     onDismissRequest: () -> Unit,
     sheetState: SheetState = rememberModalBottomSheetState(),
 ) {
-    ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
+    ModalBottomSheet(
+        shape = RectangleShape,
+        containerColor = MaterialTheme.systemS.palette.pane,
+        modifier = Modifier.systemSMenuBarTop(),
+        onDismissRequest = onDismissRequest,
+        sheetState = sheetState,
+    ) {
         Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacings.medium)) {
             ServerItem(
                 name = name,

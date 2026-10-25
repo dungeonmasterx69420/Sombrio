@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.presentation.components.BaseDialog
+import dev.jdtech.jellyfin.presentation.components.SystemSDefaults
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.setup.R as SetupR
 
@@ -49,6 +50,7 @@ fun AddServerAddressDialog(onAdd: (address: String) -> Unit, onDismiss: () -> Un
         },
     ) { contentPadding ->
         OutlinedTextField(
+            colors = SystemSDefaults.textFieldColors(),
             value = textFieldValue,
             onValueChange = { textFieldValue = it },
             modifier =

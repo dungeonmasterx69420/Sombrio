@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
@@ -23,7 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,6 +33,7 @@ import dev.jdtech.jellyfin.models.FindroidItem
 import dev.jdtech.jellyfin.models.FindroidMovie
 import dev.jdtech.jellyfin.models.FindroidShow
 import dev.jdtech.jellyfin.models.isDownloaded
+import dev.jdtech.jellyfin.presentation.components.SystemSIconButton
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 
@@ -92,7 +90,7 @@ fun ItemButtonsBar(
                         enabled = item.canPlay && canPlay,
                     )
                     if (item.playbackPositionTicks.div(600000000) > 0) {
-                        FilledTonalIconButton(onClick = { onPlayClick(true) }) {
+                        SystemSIconButton(onClick = { onPlayClick(true) }) {
                             Icon(
                                 painter = painterResource(CoreR.drawable.ic_rotate_ccw),
                                 contentDescription = null,
@@ -113,7 +111,7 @@ fun ItemButtonsBar(
                         enabled = item.canPlay && canPlay,
                     )
                     if (item.playbackPositionTicks.div(600000000) > 0) {
-                        FilledTonalIconButton(onClick = { onPlayClick(true) }) {
+                        SystemSIconButton(onClick = { onPlayClick(true) }) {
                             Icon(
                                 painter = painterResource(CoreR.drawable.ic_rotate_ccw),
                                 contentDescription = null,
@@ -122,27 +120,25 @@ fun ItemButtonsBar(
                     }
                 }
                 trailerUri?.let { uri ->
-                    FilledTonalIconButton(onClick = { onTrailerClick(uri) }) {
+                    SystemSIconButton(onClick = { onTrailerClick(uri) }) {
                         Icon(
                             painter = painterResource(CoreR.drawable.ic_film),
                             contentDescription = null,
                         )
                     }
                 }
-                FilledTonalIconButton(onClick = onMarkAsPlayedClick) {
+                SystemSIconButton(onClick = onMarkAsPlayedClick, live = item.played) {
                     Icon(
                         painter = painterResource(CoreR.drawable.ic_check),
                         contentDescription = null,
-                        tint = if (item.played) Color.Red else LocalContentColor.current,
                     )
                 }
-                FilledTonalIconButton(onClick = onMarkAsFavoriteClick) {
+                SystemSIconButton(onClick = onMarkAsFavoriteClick, live = item.favorite) {
                     when (item.favorite) {
                         true -> {
                             Icon(
                                 painter = painterResource(CoreR.drawable.ic_heart_filled),
                                 contentDescription = null,
-                                tint = Color.Red,
                             )
                         }
                         false -> {
@@ -155,14 +151,14 @@ fun ItemButtonsBar(
                 }
                 if (downloaderState != null && !downloaderState.isDownloading) {
                     if (item.isDownloaded()) {
-                        FilledTonalIconButton(onClick = { deleteDownloadDialogOpen = true }) {
+                        SystemSIconButton(onClick = { deleteDownloadDialogOpen = true }) {
                             Icon(
                                 painter = painterResource(CoreR.drawable.ic_trash),
                                 contentDescription = null,
                             )
                         }
                     } else if (item.canDownload) {
-                        FilledTonalIconButton(
+                        SystemSIconButton(
                             onClick = {
                                 storageLocations = context.getExternalFilesDirs(null)
                                 if (storageLocations.size > 1) {

@@ -47,6 +47,8 @@ import dev.jdtech.jellyfin.film.presentation.library.LibraryViewModel
 import dev.jdtech.jellyfin.models.CollectionType
 import dev.jdtech.jellyfin.models.FindroidItem
 import dev.jdtech.jellyfin.presentation.components.ErrorDialog
+import dev.jdtech.jellyfin.presentation.components.SystemSDefaults
+import dev.jdtech.jellyfin.presentation.components.systemSMenuBar
 import dev.jdtech.jellyfin.presentation.film.components.Direction
 import dev.jdtech.jellyfin.presentation.film.components.ErrorCard
 import dev.jdtech.jellyfin.presentation.film.components.ItemCard
@@ -116,6 +118,8 @@ private fun LibraryScreenLayout(
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
+                colors = SystemSDefaults.topAppBarColors(),
+                modifier = Modifier.systemSMenuBar(),
                 title = { Text(libraryName) },
                 navigationIcon = {
                     IconButton(onClick = { onAction(LibraryAction.OnBackClick) }) {

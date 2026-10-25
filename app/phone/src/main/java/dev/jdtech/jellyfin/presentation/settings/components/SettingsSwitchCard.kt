@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import dev.jdtech.jellyfin.presentation.components.SystemSDefaults
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
 import dev.jdtech.jellyfin.settings.R as SettingsR
@@ -55,6 +56,7 @@ fun SettingsSwitchCard(
             }
             Spacer(modifier = Modifier.width(MaterialTheme.spacings.default))
             Switch(
+                colors = SystemSDefaults.switchColors(),
                 checked = preference.enabled && preference.value,
                 onCheckedChange = { onClick() },
                 enabled = preference.enabled,

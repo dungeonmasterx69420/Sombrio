@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,10 +40,14 @@ import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyServer
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyServerAddress
 import dev.jdtech.jellyfin.models.ServerWithAddresses
+import dev.jdtech.jellyfin.presentation.components.SystemSDefaults
+import dev.jdtech.jellyfin.presentation.components.systemSDialogFrame
 import dev.jdtech.jellyfin.presentation.setup.components.RootLayout
 import dev.jdtech.jellyfin.presentation.setup.components.ServerBottomSheet
 import dev.jdtech.jellyfin.presentation.setup.components.ServerItem
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.SystemSButtonShape
+import dev.jdtech.jellyfin.presentation.theme.systemS
 import dev.jdtech.jellyfin.setup.R as SetupR
 import dev.jdtech.jellyfin.setup.presentation.servers.ServersAction
 import dev.jdtech.jellyfin.setup.presentation.servers.ServersEvent
@@ -159,15 +164,23 @@ private fun ServersScreenLayout(
             }
         }
         ExtendedFloatingActionButton(
+            shape = SystemSButtonShape,
+            containerColor = MaterialTheme.systemS.palette.pane,
+            contentColor = MaterialTheme.systemS.palette.ink,
+            elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
             onClick = { onAction(ServersAction.OnAddClick) },
             icon = { Icon(painterResource(CoreR.drawable.ic_plus), contentDescription = null) },
             text = { Text(text = stringResource(SetupR.string.servers_btn_add_server)) },
-            modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp),
+            modifier =
+                Modifier.align(Alignment.BottomEnd)
+                    .padding(24.dp)
+                    .then(SystemSDefaults.fabModifier()),
         )
     }
 
     if (openDeleteDialog && selectedServer != null) {
         AlertDialog(
+            modifier = Modifier.systemSDialogFrame(),
             title = { Text(text = stringResource(SetupR.string.remove_server_dialog)) },
             text = {
                 Text(

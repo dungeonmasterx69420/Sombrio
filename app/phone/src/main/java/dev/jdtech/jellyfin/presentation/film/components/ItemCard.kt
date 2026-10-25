@@ -10,13 +10,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,8 +26,10 @@ import dev.jdtech.jellyfin.models.FindroidEpisode
 import dev.jdtech.jellyfin.models.FindroidItem
 import dev.jdtech.jellyfin.models.FindroidSeason
 import dev.jdtech.jellyfin.models.isDownloaded
+import dev.jdtech.jellyfin.presentation.components.systemSFrame
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
+import dev.jdtech.jellyfin.presentation.theme.systemS
 
 @Composable
 fun ItemCard(
@@ -43,14 +44,10 @@ fun ItemCard(
             Direction.HORIZONTAL -> 260
             Direction.VERTICAL -> 150
         }
-    Column(
-        modifier =
-            modifier
-                .width(width.dp)
-                .clip(MaterialTheme.shapes.small)
-                .clickable(onClick = { onClick(item) })
-    ) {
-        Surface(shape = MaterialTheme.shapes.small) {
+    // System S: the artwork keeps its colours, framed square on a pane with a 1dp ink edge, and the
+    // name under it is drawn in the phosphor.
+    Column(modifier = modifier.width(width.dp).clickable(onClick = { onClick(item) })) {
+        Box(modifier = Modifier.systemSFrame().padding(1.dp)) {
             Box {
                 ItemPoster(item = item, direction = direction)
                 Row(
@@ -73,7 +70,7 @@ fun ItemCard(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(MaterialTheme.spacings.extraSmall))
+        Spacer(modifier = Modifier.height(6.dp))
         val title =
             when (item) {
                 is FindroidEpisode -> item.seriesName
@@ -94,7 +91,9 @@ fun ItemCard(
             }
         Text(
             text = title,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.systemS.phosphorInk,
             maxLines = if (subtitle == null) 2 else 1,
             overflow = TextOverflow.Ellipsis,
         )
@@ -102,7 +101,7 @@ fun ItemCard(
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+                color = MaterialTheme.systemS.palette.muted,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )

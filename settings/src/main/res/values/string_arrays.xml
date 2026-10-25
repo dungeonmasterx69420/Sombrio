@@ -10,6 +10,18 @@
         <item>light</item>
         <item>dark</item>
     </string-array>
+    <string-array name="phosphor">
+        <item>@string/phosphor_amber</item>
+        <item>@string/phosphor_green</item>
+        <item>@string/phosphor_cyan</item>
+        <item>@string/phosphor_pink</item>
+    </string-array>
+    <string-array name="phosphor_values">
+        <item>amber</item>
+        <item>green</item>
+        <item>cyan</item>
+        <item>pink</item>
+    </string-array>
     <string-array name="player_backends">
         <item>exoplayer</item>
         <item>mpv</item>

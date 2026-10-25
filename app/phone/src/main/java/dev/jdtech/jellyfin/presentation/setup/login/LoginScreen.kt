@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.jdtech.jellyfin.core.R as CoreR
+import dev.jdtech.jellyfin.presentation.components.SystemSDefaults
 import dev.jdtech.jellyfin.presentation.setup.components.LoadingButton
 import dev.jdtech.jellyfin.presentation.setup.components.RootLayout
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
@@ -133,6 +134,7 @@ private fun LoginScreenLayout(
             )
             Spacer(modifier = Modifier.height(24.dp))
             OutlinedTextField(
+                colors = SystemSDefaults.textFieldColors(),
                 value = username,
                 leadingIcon = {
                     Icon(
@@ -151,6 +153,7 @@ private fun LoginScreenLayout(
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
+                colors = SystemSDefaults.textFieldColors(),
                 value = password,
                 leadingIcon = {
                     Icon(

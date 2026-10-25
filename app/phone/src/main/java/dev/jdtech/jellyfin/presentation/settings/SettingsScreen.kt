@@ -35,6 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.jdtech.jellyfin.core.R as CoreR
+import dev.jdtech.jellyfin.presentation.components.SystemSDefaults
+import dev.jdtech.jellyfin.presentation.components.systemSMenuBar
 import dev.jdtech.jellyfin.presentation.settings.components.SettingsGroupCard
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
@@ -152,6 +154,8 @@ private fun SettingsScreenLayout(
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
+                colors = SystemSDefaults.topAppBarColors(),
+                modifier = Modifier.systemSMenuBar(),
                 title = { Text(stringResource(title)) },
                 navigationIcon = {
                     IconButton(onClick = { onAction(SettingsAction.OnBackClick) }) {

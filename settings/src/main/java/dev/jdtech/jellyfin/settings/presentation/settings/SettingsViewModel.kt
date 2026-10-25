@@ -176,16 +176,21 @@ class SettingsViewModel @Inject constructor(private val appPreferences: AppPrefe
                                                     options = R.array.theme,
                                                     optionValues = R.array.theme_values,
                                                 ),
-                                                PreferenceSwitch(
-                                                    nameStringResource = R.string.dynamic_colors,
+                                                PreferenceSelect(
+                                                    nameStringResource = R.string.phosphor,
                                                     descriptionStringRes =
-                                                        R.string.dynamic_colors_summary,
-                                                    enabled =
-                                                        Build.VERSION.SDK_INT >=
-                                                            Build.VERSION_CODES.S,
+                                                        R.string.phosphor_summary,
                                                     supportedDeviceTypes = listOf(DeviceType.PHONE),
-                                                    backendPreference =
-                                                        appPreferences.dynamicColors,
+                                                    backendPreference = appPreferences.phosphor,
+                                                    options = R.array.phosphor,
+                                                    optionValues = R.array.phosphor_values,
+                                                ),
+                                                PreferenceSwitch(
+                                                    nameStringResource = R.string.amoled_theme,
+                                                    descriptionStringRes =
+                                                        R.string.amoled_theme_summary,
+                                                    supportedDeviceTypes = listOf(DeviceType.PHONE),
+                                                    backendPreference = appPreferences.amoled,
                                                 ),
                                             ),
                                     ),

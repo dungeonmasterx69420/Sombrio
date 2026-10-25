@@ -43,8 +43,11 @@ import androidx.compose.ui.window.Dialog
 import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.models.SortBy
 import dev.jdtech.jellyfin.models.SortOrder
+import dev.jdtech.jellyfin.presentation.components.systemSDialogFrame
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
+import dev.jdtech.jellyfin.presentation.theme.SystemSChipShape
 import dev.jdtech.jellyfin.presentation.theme.spacings
+import dev.jdtech.jellyfin.presentation.theme.systemS
 
 @Composable
 fun SortByDialog(
@@ -75,7 +78,7 @@ fun SortByDialog(
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
-            modifier = Modifier.fillMaxWidth().heightIn(max = 540.dp),
+            modifier = Modifier.systemSDialogFrame().fillMaxWidth().heightIn(max = 540.dp),
             shape = MaterialTheme.shapes.extraLarge,
             colors =
                 CardDefaults.cardColors(
@@ -107,10 +110,17 @@ fun SortByDialog(
                                 SegmentedButtonDefaults.itemShape(
                                     index = index,
                                     count = orderOptions.size,
+                                    baseShape = SystemSChipShape,
                                 ),
+                            // System S: the selected one is inverted
                             colors =
                                 SegmentedButtonDefaults.colors(
-                                    inactiveContainerColor = Color.Transparent
+                                    activeContainerColor = MaterialTheme.systemS.palette.ink,
+                                    activeContentColor = MaterialTheme.systemS.palette.pane,
+                                    activeBorderColor = MaterialTheme.systemS.palette.ink,
+                                    inactiveContainerColor = Color.Transparent,
+                                    inactiveContentColor = MaterialTheme.systemS.palette.ink,
+                                    inactiveBorderColor = MaterialTheme.systemS.palette.ink,
                                 ),
                             icon = {
                                 AnimatedVisibility(
