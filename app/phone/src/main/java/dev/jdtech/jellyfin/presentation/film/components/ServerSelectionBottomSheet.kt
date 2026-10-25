@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
@@ -27,6 +26,7 @@ import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyServer
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyServerAddress
 import dev.jdtech.jellyfin.models.ServerWithAddresses
+import dev.jdtech.jellyfin.presentation.components.SystemSButton
 import dev.jdtech.jellyfin.presentation.components.systemSMenuBarTop
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
@@ -106,7 +106,7 @@ private fun ServerSelectionBottomSheetLayout(
                 )
             }
             item(key = "manage") {
-                OutlinedButton(onClick = onManage, modifier = Modifier.fillMaxWidth()) {
+                SystemSButton(onClick = onManage, modifier = Modifier.fillMaxWidth()) {
                     Text(text = stringResource(CoreR.string.manage_servers))
                 }
             }

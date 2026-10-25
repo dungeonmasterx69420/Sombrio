@@ -23,7 +23,7 @@ android {
         minSdk = Versions.MIN_SDK
         targetSdk = Versions.TARGET_SDK
 
-        // CI numbers every build, so that each one installs over the last (see .github/workflows/sombrio.yaml)
+        // CI numbers every build so that each installs over the last (.github/workflows)
         versionCode =
             providers.gradleProperty("sombrio.versionCode").orNull?.toInt() ?: Versions.APP_CODE
         versionName = Versions.APP_NAME

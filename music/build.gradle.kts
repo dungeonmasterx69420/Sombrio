@@ -5,8 +5,8 @@ plugins {
 
 java { toolchain { languageVersion = Versions.JAVA } }
 
-// The Music tab: the activity sombrAMP runs in, and what sombrAMP's Android app declares around it. sombrAMP itself
-// comes from music/module, see music/build-module.sh.
+// The Music tab: the activity sombrAMP runs in, and what sombrAMP's own Android app declares
+// around it. sombrAMP itself comes from music/module, see music/build-module.sh.
 android {
     namespace = "wtf.sombra.sombrio.music"
     compileSdk = Versions.COMPILE_SDK

@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
 import dev.jdtech.jellyfin.presentation.theme.spacings
+import dev.jdtech.jellyfin.presentation.theme.systemS
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -49,8 +50,10 @@ fun UserItem(
                     },
                 ),
     ) {
+        // System S: inverted, ink with a pane icon
         Surface(
-            color = MaterialTheme.colorScheme.surfaceTint,
+            color = MaterialTheme.systemS.palette.ink,
+            contentColor = MaterialTheme.systemS.palette.pane,
             shape = MaterialTheme.shapes.small,
             modifier = Modifier.size(48.dp),
         ) {

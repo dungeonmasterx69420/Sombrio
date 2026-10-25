@@ -25,6 +25,7 @@ import android.widget.ImageView
 import android.widget.Space
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -34,6 +35,7 @@ import androidx.media3.ui.DefaultTimeBar
 import androidx.media3.ui.PlayerControlView
 import androidx.media3.ui.PlayerView
 import dagger.hilt.android.AndroidEntryPoint
+import dev.jdtech.jellyfin.core.presentation.theme.SystemSPhosphor
 import dev.jdtech.jellyfin.databinding.ActivityPlayerBinding
 import dev.jdtech.jellyfin.player.local.presentation.PlayerEvents
 import dev.jdtech.jellyfin.player.local.presentation.PlayerViewModel
@@ -316,6 +318,11 @@ class PlayerActivity : BasePlayerActivity() {
         // Set marker color
         val timeBar = binding.playerView.findViewById<DefaultTimeBar>(R.id.exo_progress)
         timeBar.setAdMarkerColor(Color.WHITE)
+        // Progress is live, so it's drawn in the phosphor chosen in the settings
+        val phosphor =
+            SystemSPhosphor.fromKey(appPreferences.getValue(appPreferences.phosphor)).glow.toArgb()
+        timeBar.setPlayedColor(phosphor)
+        timeBar.setScrubberColor(phosphor)
 
         if (appPreferences.getValue(appPreferences.playerTrickplay)) {
             val imagePreview = binding.playerView.findViewById<ImageView>(R.id.image_preview)

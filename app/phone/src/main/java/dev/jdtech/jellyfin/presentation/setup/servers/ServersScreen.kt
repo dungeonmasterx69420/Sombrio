@@ -1,13 +1,11 @@
 package dev.jdtech.jellyfin.presentation.setup.servers
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -40,6 +38,7 @@ import dev.jdtech.jellyfin.core.R as CoreR
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyServer
 import dev.jdtech.jellyfin.core.presentation.dummy.dummyServerAddress
 import dev.jdtech.jellyfin.models.ServerWithAddresses
+import dev.jdtech.jellyfin.presentation.components.SombraMark
 import dev.jdtech.jellyfin.presentation.components.SystemSDefaults
 import dev.jdtech.jellyfin.presentation.components.systemSDialogFrame
 import dev.jdtech.jellyfin.presentation.setup.components.RootLayout
@@ -113,11 +112,7 @@ private fun ServersScreenLayout(
                     .align(Alignment.Center)
         ) {
             Spacer(modifier = Modifier.weight(0.2f))
-            Image(
-                painter = painterResource(id = CoreR.drawable.ic_banner),
-                contentDescription = null,
-                modifier = Modifier.width(250.dp).align(Alignment.CenterHorizontally),
-            )
+            SombraMark(height = 72.dp, modifier = Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.height(32.dp))
             Text(
                 text = stringResource(SetupR.string.servers),

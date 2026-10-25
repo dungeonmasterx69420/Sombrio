@@ -1,7 +1,6 @@
 package dev.jdtech.jellyfin.presentation.setup.login
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,19 +12,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,7 +43,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.jdtech.jellyfin.core.R as CoreR
+import dev.jdtech.jellyfin.presentation.components.SombraMark
+import dev.jdtech.jellyfin.presentation.components.SystemSButton
 import dev.jdtech.jellyfin.presentation.components.SystemSDefaults
+import dev.jdtech.jellyfin.presentation.components.SystemSSpinner
 import dev.jdtech.jellyfin.presentation.setup.components.LoadingButton
 import dev.jdtech.jellyfin.presentation.setup.components.RootLayout
 import dev.jdtech.jellyfin.presentation.theme.FindroidTheme
@@ -117,11 +116,7 @@ private fun LoginScreenLayout(
                     .align(Alignment.Center)
                     .verticalScroll(scrollState),
         ) {
-            Image(
-                painter = painterResource(id = CoreR.drawable.ic_banner),
-                contentDescription = null,
-                modifier = Modifier.width(250.dp).align(Alignment.CenterHorizontally),
-            )
+            SombraMark(height = 72.dp, modifier = Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.height(32.dp))
             Text(
                 text = stringResource(SetupR.string.login),
@@ -221,15 +216,12 @@ private fun LoginScreenLayout(
                     Spacer(modifier = Modifier.height(8.dp))
                     Box {
                         if (state.quickConnectCode != null) {
-                            CircularProgressIndicator(
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier =
-                                    Modifier.size(24.dp)
-                                        .align(Alignment.CenterStart)
-                                        .offset(x = 8.dp),
+                            SystemSSpinner(
+                                size = 24.dp,
+                                modifier = Modifier.align(Alignment.CenterStart).offset(x = 8.dp),
                             )
                         }
-                        OutlinedButton(
+                        SystemSButton(
                             onClick = { onAction(LoginAction.OnQuickConnectClick) },
                             modifier = Modifier.fillMaxWidth(),
                         ) {
