@@ -3,16 +3,20 @@ import 'user_preferences.dart';
 /// Destinations that can be pinned between Home and You on the mobile bottom
 /// navbar. The names are the wire format of [UserPreferences.bottomNavbarTabs],
 /// so renaming one breaks every synced profile that holds it.
-enum BottomNavTab { search, libraries, favorites, genres, liveTv, discover, folders }
+///
+/// Sombrio: [music] is sombrAMP, the music player next to Moonfin's screens
+/// (lib/sombrio/sombrio_music.dart).
+enum BottomNavTab { search, libraries, favorites, genres, liveTv, discover, folders, music }
 
 const int kMaxPinnedBottomNavTabs = 3;
 
-// Libraries sits second so a user on default settings keeps it on the bar.
+// Sombrio: Libraries, Live TV and Music, then what Moonfin pins.
 const List<BottomNavTab> _autoOrder = [
-  BottomNavTab.search,
   BottomNavTab.libraries,
-  BottomNavTab.favorites,
   BottomNavTab.liveTv,
+  BottomNavTab.music,
+  BottomNavTab.search,
+  BottomNavTab.favorites,
   BottomNavTab.discover,
   BottomNavTab.genres,
   BottomNavTab.folders,
@@ -94,6 +98,7 @@ class BottomNavTabGates {
         BottomNavTab.liveTv => !kidsMode && showLiveTv,
         BottomNavTab.discover => !kidsMode && showSeerr && seerrAvailable,
         BottomNavTab.folders => folderView,
+        BottomNavTab.music => true,
       };
 
   /// The tabs the bar shows between Home and You. Automatic pins follow the

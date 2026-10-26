@@ -44,3 +44,10 @@
     native <methods>;
 }
 -keepattributes EnclosingMethod,InnerClasses
+
+# --- Sombrio ------------------------------------------------------------------
+# The Music tab's plugins (music/sombrAMP), as Sombrio kept them when sombrAMP
+# was a Flutter module: R8 sometimes strips plugin classes
+# (https://github.com/flutter/flutter/issues/154580).
+-if class * implements io.flutter.embedding.engine.plugins.FlutterPlugin
+-keep,allowshrinking,allowobfuscation class <1>

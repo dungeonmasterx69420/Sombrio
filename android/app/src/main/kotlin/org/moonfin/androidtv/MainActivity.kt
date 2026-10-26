@@ -359,6 +359,8 @@ class MainActivity : AudioServiceActivity(), GamepadsCompatibleActivity {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         engineHandedToActivity = flutterEngine
+        // Sombrio: sombrAMP's channels, for the Music tab, and installing updates
+        wtf.sombra.sombrio.SombrioChannels.register(this, flutterEngine.dartExecutor.binaryMessenger)
 
         val bridge = LibretroBridge(
             flutterEngine,

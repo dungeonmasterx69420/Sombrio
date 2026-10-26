@@ -14,6 +14,7 @@ import 'package:screen_retriever/screen_retriever.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'app.dart';
+import 'sombrio/sombrio_shell.dart';
 import 'data/models/aggregated_item.dart';
 import 'background/watch_next_background.dart' as watch_next_bg;
 import 'data/services/carplay_service.dart';
@@ -1034,7 +1035,8 @@ void main() async {
     GetIt.instance<AirPlayCommandBridge>().start();
   } catch (_) {}
 
-  runApp(const MoonfinApp());
+  // Sombrio: Moonfin's screens, with the Music tab next to them
+  runApp(const SombrioShell(films: MoonfinApp()));
 }
 
 /// Startup work that runs after the first frame. The internal order matters:

@@ -2374,7 +2374,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get bookReadingUnavailableMessage =>
-      'Open it in Moonfin on a phone, tablet or computer to read it. Audiobooks still play here.';
+      'Open it in Sombrio on a phone, tablet or computer to read it. Audiobooks still play here.';
 
   @override
   String formatCannotRenderInApp(String extension) {
@@ -15942,7 +15942,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get rommUnlinkNote =>
-      'Unlinking stops Moonfin from using your RomM key. The key stays in RomM until you remove it from your API tokens there.';
+      'Unlinking stops Sombrio from using your RomM key. The key stays in RomM until you remove it from your API tokens there.';
 
   @override
   String get rommUnlink => 'Unlink';
@@ -15956,7 +15956,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get rommUnreachable =>
-      'Moonfin couldn\'t reach RomM. Try again in a moment.';
+      'Sombrio couldn\'t reach RomM. Try again in a moment.';
 
   @override
   String get rommNotAvailable => 'This server has no RomM library.';

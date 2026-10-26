@@ -14,6 +14,18 @@ subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
+// As in sombrAMP's android/build.gradle: some of its plugins (the Music tab, music/sombrAMP) compile against Android SDKs
+// older than their dependencies need. Registered before :app is evaluated below.
+subprojects {
+    afterEvaluate {
+        if (plugins.hasPlugin("com.android.library")) {
+            extensions.configure<com.android.build.gradle.LibraryExtension>("android") {
+                val sdk = compileSdkVersion?.removePrefix("android-")?.toIntOrNull() ?: 0
+                if (sdk < 36) compileSdkVersion(36)
+            }
+        }
+    }
+}
 subprojects {
     project.evaluationDependsOn(":app")
 }

@@ -21,6 +21,7 @@ import 'car_artwork.dart';
 import 'headless_session_bootstrap.dart';
 import 'last_playback_session_store.dart';
 import 'media_browse_service.dart';
+import '../sombrio/sombrio_audio.dart';
 
 class MoonfinAudioHandler extends BaseAudioHandler
     with QueueHandler, SeekHandler {
@@ -770,7 +771,8 @@ Future<void> initAudioService({
   final browse = GetIt.instance<MediaBrowseService>();
   final lastSessionStore = GetIt.instance<LastPlaybackSessionStore>();
 
-  final handler = await AudioService.init<MoonfinAudioHandler>(
+  // Sombrio: one audio service for Moonfin's player and the Music tab's
+  final handler = await SombrioAudio.init<MoonfinAudioHandler>(
     builder: () =>
         MoonfinAudioHandler(manager, clientFactory, browse, lastSessionStore),
     config: AudioServiceConfig(

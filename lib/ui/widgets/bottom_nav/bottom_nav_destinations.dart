@@ -17,6 +17,7 @@ import '../shuffle_overlay.dart';
 import '../user_menu_dialog.dart';
 import 'bottom_nav_model.dart';
 import 'bottom_nav_tab.dart';
+import '../../../sombrio/sombrio_music.dart';
 
 String bottomNavTabLabel(AppLocalizations l10n, BottomNavTab tab) =>
     switch (tab) {
@@ -29,6 +30,7 @@ String bottomNavTabLabel(AppLocalizations l10n, BottomNavTab tab) =>
           ? GetIt.instance<SeerrPreferences>().labelOrDefault(l10n.seerr)
           : l10n.seerr,
       BottomNavTab.folders => l10n.folders,
+      BottomNavTab.music => l10n.music,
     };
 
 String bottomNavHubActionLabel(
@@ -91,6 +93,8 @@ Widget bottomNavTabIconWidget(
       adaptive(Icons.live_tv_rounded, Icons.live_tv_outlined),
     BottomNavTab.folders =>
       adaptive(Icons.folder_rounded, Icons.folder_outlined),
+    BottomNavTab.music =>
+      adaptive(Icons.music_note_rounded, Icons.music_note_outlined),
     BottomNavTab.genres => Image.asset(
         'assets/icons/genres.png',
         width: size,
@@ -145,6 +149,11 @@ BottomNavItemView bottomNavItemView(
 /// Opens [tab]'s screen. Libraries has no screen of its own and is handled by
 /// the caller, which owns the library list.
 void openBottomNavTab(BuildContext context, BottomNavTab tab) {
+  // Sombrio: Music is sombrAMP, which is shown in place of Moonfin's screens
+  if (tab == BottomNavTab.music) {
+    SombrioMusic.instance.open();
+    return;
+  }
   final route = switch (tab) {
     BottomNavTab.search => Destinations.search,
     BottomNavTab.favorites => Destinations.allFavorites,
@@ -152,7 +161,7 @@ void openBottomNavTab(BuildContext context, BottomNavTab tab) {
     BottomNavTab.liveTv => Destinations.liveTvGuide,
     BottomNavTab.discover => Destinations.seerrDiscover,
     BottomNavTab.folders => Destinations.folderView,
-    BottomNavTab.libraries => null,
+    BottomNavTab.libraries || BottomNavTab.music => null,
   };
   if (route == null) return;
   context.navigateTopLevel(route);

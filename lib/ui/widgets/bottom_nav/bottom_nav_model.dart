@@ -81,6 +81,8 @@ bool bottomNavTabMatchesRoute(BottomNavTab tab, String route) {
     BottomNavTab.discover => under('/seerr'),
     BottomNavTab.folders =>
       route == Destinations.folderView || under('/folder'),
+    // Sombrio: the music player isn't one of Moonfin's screens
+    BottomNavTab.music => false,
   };
 }
 

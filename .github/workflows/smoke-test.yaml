@@ -1,6 +1,6 @@
 name: Smoke test
 
-# Opens Sombrio and its Music tab on Android emulators, in dark mode as most phones are, and checks that both start
+# Opens Sombrio on Android emulators, in dark mode as most phones are, and checks that it starts
 # (.github/scripts/smoke-test.sh). When it doesn't, the run fails with the crash, and logcat and a screenshot are
 # attached to it.
 #

@@ -54,6 +54,7 @@ import '../../util/focus/dpad_keys.dart';
 import '../../util/focus/input_mode_tracker.dart';
 import '../navigation/app_router.dart';
 import 'adaptive/sf_symbol.dart';
+import '../../sombrio/sombrio_music.dart';
 
 const _kToolbarHeightTV = 95.0;
 const _kToolbarHeightDesktop = 80.0;
@@ -1137,6 +1138,21 @@ class _TopToolbarState extends State<TopToolbar> with RouteAware {
                       if (_isActive(Destinations.liveTvGuide)) return;
                       context.navigateTopLevel(Destinations.liveTvGuide);
                     },
+                  ),
+                ),
+              ],
+              // Sombrio: the music player, sombrAMP
+              if (!_kidsMode) ...[
+                _gap(),
+                _orderButton(
+                  order: (order++).toDouble(),
+                  child: ExpandableIconButton(
+                    key: const ValueKey('toolbar_music'),
+                    forceExpanded: alwaysExpanded,
+                    icon: Icons.music_note_rounded,
+                    label: l10n.music,
+                    baseColor: nextNavColor(),
+                    onPressed: SombrioMusic.instance.open,
                   ),
                 ),
               ],

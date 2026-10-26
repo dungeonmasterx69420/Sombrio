@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- sombrAMP, the Music tab, looks these up by name for its media notification and Android Auto actions, and the app's
+     audio service shows the S mark (mipmap/white) as the notification's icon, so resource shrinking must keep them -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/baseline_*,@drawable/tabler_icons_*,@mipmap/white" />

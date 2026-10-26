@@ -1,5 +1,5 @@
 name: moonfin
-description: "Moonfin - Jellyfin & Emby media client for mobile, tablet, and desktop"
+description: "Sombrio - films, shows, Live TV and music from your own Jellyfin server, by sombra. Built on Moonfin."
 publish_to: 'none'
 version: 2.7.0+30000154
 
@@ -123,6 +123,11 @@ dependencies:
   screen_retriever: ^0.2.0
   window_manager: ^0.5.1
 
+  # The Music tab: sombrAMP, the music/sombrAMP submodule, whose package is still named after Finamp. Sombrio is
+  # built with --dart-define=SOMBRIO=true for it (lib/sombrio/sombrio_music.dart).
+  finamp:
+    path: music/sombrAMP
+
   # Local packages
   server_core:
     path: packages/server_core
@@ -213,6 +218,23 @@ dev_dependencies:
   plugin_platform_interface: ^2.1.8
 
 dependency_overrides:
+  # sombrAMP's overrides (music/sombrAMP/pubspec.yaml), which pub ignores in a dependency. The audio_service fork is
+  # 0.18.19 with iOS fixes sombrAMP's player needs, and plays Moonfin's side as well.
+  isar:
+    git:
+      url: https://github.com/Komodo5197/isar-community.git
+      ref: a602cd8999048faba043f7e1ce7ba92f4d812762
+      path: packages/isar
+  audio_service:
+    git:
+      url: https://github.com/finamp-app/audio_service.git
+      ref: 77d8a1253cb34ab398e3e7bc364629f46089a897
+      path: audio_service
+  audio_service_platform_interface:
+    git:
+      url: https://github.com/finamp-app/audio_service.git
+      ref: 77d8a1253cb34ab398e3e7bc364629f46089a897
+      path: audio_service_platform_interface
   # objective_c 9.3.0's build hook imports a private path out of
   # native_toolchain_c, which stopped compiling on the Flutter 3.47 SDK and takes
   # `flutter test` down with it. 9.4.1 drops that import.

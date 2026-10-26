@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -7,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/services/app_update_service.dart';
 import '../../l10n/app_localizations.dart';
+import '../../sombrio/sombrio_updates.dart';
 import '../../util/platform_detection.dart';
 import 'status_banner_pill.dart';
 
@@ -108,10 +110,13 @@ class _AppUpdateBannerState extends State<AppUpdateBanner>
             tint: tint,
             onTap: () {
               unawaited(
-                launchUrl(
-                  update.downloadUri,
-                  mode: LaunchMode.externalApplication,
-                ),
+                // Sombrio: downloads the APK and opens Android's installer
+                Platform.isAndroid
+                    ? SombrioUpdates.install(context, update.downloadUri)
+                    : launchUrl(
+                        update.downloadUri,
+                        mode: LaunchMode.externalApplication,
+                      ),
               );
               unawaited(_dismiss());
             },

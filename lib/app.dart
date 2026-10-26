@@ -72,6 +72,7 @@ import 'util/focus/key_event_utils.dart';
 import 'util/focus/gamepad/gamepad_navigation_scope.dart';
 import 'util/focus/gamepad/gamepad_key_synthesizer.dart';
 import 'util/focus/open_popup.dart';
+import 'sombrio/sombrio.dart';
 import 'package:custom_tv_text_field/custom_tv_text_field.dart';
 
 class MoonfinApp extends StatefulWidget {
@@ -239,8 +240,8 @@ class _MoonfinAppState extends State<MoonfinApp> {
           animation: _themeController,
           builder: (context, _) {
             return MaterialApp.router(
-              onGenerateTitle: (context) =>
-                  AppLocalizations.of(context).appTitle,
+              // Sombrio: the app's name in the recent apps list
+              onGenerateTitle: (context) => Sombrio.name,
               theme: AppTheme.buildTheme(_themeController.activeSpec),
               routerConfig: appRouter,
               debugShowCheckedModeBanner: false,

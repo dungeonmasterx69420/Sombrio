@@ -10,7 +10,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Moonfin';
+  String get appTitle => 'Sombrio';
 
   @override
   String get animeMarkerFiller => 'Filler';
@@ -147,7 +147,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String appVersionFooter(String version) {
-    return 'Moonfin version $version';
+    return 'Sombrio version $version';
   }
 
   @override
@@ -199,7 +199,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get secureStorageUnavailableMessage =>
-      'Moonfin could not access your system keyring. Login can continue, but secure token storage may be unavailable until the keyring is unlocked.';
+      'Sombrio could not access your system keyring. Login can continue, but secure token storage may be unavailable until the keyring is unlocked.';
 
   @override
   String get ok => 'OK';
@@ -492,7 +492,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get interfaceLayoutSubtitle =>
-      'Override the detected layout when this device is read wrong. Restart Moonfin for changes to take effect.';
+      'Override the detected layout when this device is read wrong. Restart Sombrio for changes to take effect.';
 
   @override
   String get interfaceLayoutAutomatic => 'Automatic';
@@ -577,7 +577,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get customThemeSubtitle =>
-      'Custom themes alter visual elements across Moonfin. Choose one of these options to suit your style.';
+      'Custom themes alter visual elements across Sombrio. Choose one of these options to suit your style.';
 
   @override
   String get keyboardStyle => 'Keyboard Style';
@@ -718,7 +718,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get exitApp => 'Exit Moonfin?';
+  String get exitApp => 'Exit Sombrio?';
 
   @override
   String get exitAppConfirmation => 'Are you sure you want to exit?';
@@ -1893,7 +1893,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shuffleAllMusic => 'Shuffle all music';
 
   @override
-  String get carSignInPrompt => 'Sign in to Moonfin on your phone';
+  String get carSignInPrompt => 'Sign in to Sombrio on your phone';
 
   @override
   String get carServerUnreachable => 'Can\'t reach your server';
@@ -2173,7 +2173,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shortcutToggleFullscreen => 'Fullscreen on or off';
 
   @override
-  String get shortcutQuit => 'Quit Moonfin';
+  String get shortcutQuit => 'Quit Sombrio';
 
   @override
   String get shortcutPlayPause => 'Play or pause';
@@ -2344,7 +2344,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bookReadingUnavailableMessage =>
-      'Open it in Moonfin on a phone, tablet or computer to read it. Audiobooks still play here.';
+      'Open it in Sombrio on a phone, tablet or computer to read it. Audiobooks still play here.';
 
   @override
   String formatCannotRenderInApp(String extension) {
@@ -3167,7 +3167,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loadingAnimationDescription =>
-      'Customize the loading animations used throughout Moonfin';
+      'Customize the loading animations used throughout Sombrio';
 
   @override
   String get loadingAnimationConfiguration => 'Loading Animation Configuration';
@@ -4190,7 +4190,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notSetMpvConf =>
-      'Not set. Moonfin will try a default mpv.conf in app/data folders.';
+      'Not set. Sombrio will try a default mpv.conf in app/data folders.';
 
   @override
   String get selectMpvConf => 'Select mpv.conf';
@@ -4482,7 +4482,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get downloadLocationLimitedByAndroid =>
-      'Android only lets Moonfin write to the folders it owns, and this device has no removable storage. Turn on Save to Downloads folder above to keep downloads somewhere other apps can reach.';
+      'Android only lets Sombrio write to the folders it owns, and this device has no removable storage. Turn on Save to Downloads folder above to keep downloads somewhere other apps can reach.';
 
   @override
   String get saveToDownloadsFolder => 'Save to Downloads Folder';
@@ -4771,7 +4771,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get libraryVisibilityDescription =>
-      'Toggle home page visibility per library. Restart Moonfin for changes to take effect.';
+      'Toggle home page visibility per library. Restart Sombrio for changes to take effect.';
 
   @override
   String get showInNavigation => 'Show in navigation';
@@ -5498,7 +5498,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sourceCode => 'Source Code';
 
   @override
-  String get sourceCodeUrl => 'https://github.com/Moonfin-Client/Moonfin-Core';
+  String get sourceCodeUrl => 'https://github.com/dungeonmasterx69420/Sombrio';
 
   @override
   String get checkForUpdatesNow => 'Check for Updates Now';
@@ -5675,7 +5675,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancelRequest4k => 'Cancel 4K Request';
 
   @override
-  String get playInMoonfin => 'Play in Moonfin';
+  String get playInMoonfin => 'Play in Sombrio';
 
   @override
   String get requestedByLabel => 'Requested by';
@@ -5720,7 +5720,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get keep => 'Keep';
 
   @override
-  String get itemNotFoundInLibrary => 'Item not found in your Moonfin library';
+  String get itemNotFoundInLibrary => 'Item not found in your Sombrio library';
 
   @override
   String get errorSearchingLibrary => 'Error searching library';
@@ -7714,7 +7714,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminServerRebootMessage =>
-      'Server reboot in progress, please restart Moonfin';
+      'Server reboot in progress, please restart Sombrio';
 
   @override
   String get adminActiveSessions => 'Active Sessions';
@@ -11408,7 +11408,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsLibraryVisibilitySubtitle =>
-      'Toggle home page visibility per library. Restart Moonfin for changes to take effect.';
+      'Toggle home page visibility per library. Restart Sombrio for changes to take effect.';
 
   @override
   String get settingsMediaBarAndLocalPreviews => 'Media Bar & Local Previews';
@@ -11547,14 +11547,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsPrivacyPolicy => 'Privacy Policy';
 
   @override
-  String get settingsPrivacyPolicySubtitle => 'How Moonfin handles your data';
+  String get settingsPrivacyPolicySubtitle => 'How Sombrio handles your data';
 
   @override
   String get settingsCheckForUpdates => 'Check for Updates';
 
   @override
   String get settingsCheckForUpdatesSubtitle =>
-      'Check for the latest Moonfin release';
+      'Check for the latest Sombrio release';
 
   @override
   String get settingsBoth => 'Both';
@@ -12336,7 +12336,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get webDiagnostics => 'Web diagnostics';
 
   @override
-  String get webDiagnosticsTitle => 'Moonfin Web Diagnostics';
+  String get webDiagnosticsTitle => 'Sombrio Web Diagnostics';
 
   @override
   String get webDiagnosticsIntro =>
@@ -12352,11 +12352,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get webDiagnosticsMixedContentFailureBody =>
-      'Moonfin detected an HTTPS page trying to call an HTTP server URL. Browsers block this request before it reaches your server.';
+      'Sombrio detected an HTTPS page trying to call an HTTP server URL. Browsers block this request before it reaches your server.';
 
   @override
   String get webDiagnosticsCorsFailureBody =>
-      'Moonfin detected a browser-level request failure that is commonly caused by missing CORS or preflight headers on the media server.';
+      'Sombrio detected a browser-level request failure that is commonly caused by missing CORS or preflight headers on the media server.';
 
   @override
   String webDiagnosticsTargetUrl(String url) {
@@ -12404,7 +12404,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get webDiagnosticsMixedContentFix =>
-      'Fix: serve your media server or proxy endpoint via HTTPS, or load Moonfin over HTTP on trusted local networks only.';
+      'Fix: serve your media server or proxy endpoint via HTTPS, or load Sombrio over HTTP on trusted local networks only.';
 
   @override
   String get webDiagnosticsNoMixedContentDetected =>
@@ -14109,7 +14109,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get impellerRenderingSubtitle =>
-      'Impeller is Flutter\'s modern GPU renderer for smoother animations and less stutter. On some TV boxes and older GPUs it can cause glitches or black video; switch it Off if you see those. Automatic picks the best default for your device. Restart Moonfin to apply.';
+      'Impeller is Flutter\'s modern GPU renderer for smoother animations and less stutter. On some TV boxes and older GPUs it can cause glitches or black video; switch it Off if you see those. Automatic picks the best default for your device. Restart Sombrio to apply.';
 
   @override
   String get impellerAuto => 'Automatic';
@@ -14125,7 +14125,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get impellerRestartMessage =>
-      'Moonfin needs to restart to change the rendering engine. Close the app now, then reopen it to apply.';
+      'Sombrio needs to restart to change the rendering engine. Close the app now, then reopen it to apply.';
 
   @override
   String get impellerCloseNow => 'Close app now';
@@ -14619,7 +14619,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get autoDownloadTranscodedForegroundNote =>
-      'Transcoded qualities only download while Moonfin is open. Original quality also downloads in the background.';
+      'Transcoded qualities only download while Sombrio is open. Original quality also downloads in the background.';
 
   @override
   String get autoDownloadTranscodedRunningNote =>
@@ -14627,7 +14627,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get autoDownloadForegroundOnly =>
-      'Downloads only while Moonfin is open';
+      'Downloads only while Sombrio is open';
 
   @override
   String get autoDownloadQualityTitle => 'Auto-download quality';
@@ -14650,7 +14650,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get smartDownloadsEnableDescription =>
-      'When you finish an episode on any device, Moonfin downloads the next ones. Episodes it downloads are deleted once watched.';
+      'When you finish an episode on any device, Sombrio downloads the next ones. Episodes it downloads are deleted once watched.';
 
   @override
   String get smartDownloadsKeepReady => 'Episodes to Keep Downloaded';
@@ -14724,15 +14724,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get autoDownloadBackgroundRefreshSubtitle =>
-      'Allow the system to check for new episodes periodically while Moonfin is closed';
+      'Allow the system to check for new episodes periodically while Sombrio is closed';
 
   @override
   String get autoDownloadBackgroundRefreshDenied =>
-      'Background App Refresh is disabled for Moonfin. Enable it in iOS Settings.';
+      'Background App Refresh is disabled for Sombrio. Enable it in iOS Settings.';
 
   @override
   String get autoDownloadBackgroundRestrictedAndroid =>
-      'Background usage is restricted for Moonfin in Android Settings.';
+      'Background usage is restricted for Sombrio in Android Settings.';
 
   @override
   String get autoDownloadCheckNow => 'Check Now';
@@ -14950,7 +14950,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get topShelfDescription =>
-      'What the Apple TV home screen shows above the Moonfin icon when it is selected. This setting stays on this device.';
+      'What the Apple TV home screen shows above the Sombrio icon when it is selected. This setting stays on this device.';
 
   @override
   String get topShelfLatestMedia => 'Latest media';
@@ -15650,7 +15650,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rommUnlinkNote =>
-      'Unlinking stops Moonfin from using your RomM key. The key stays in RomM until you remove it from your API tokens there.';
+      'Unlinking stops Sombrio from using your RomM key. The key stays in RomM until you remove it from your API tokens there.';
 
   @override
   String get rommUnlink => 'Unlink';
@@ -15664,7 +15664,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rommUnreachable =>
-      'Moonfin couldn\'t reach RomM. Try again in a moment.';
+      'Sombrio couldn\'t reach RomM. Try again in a moment.';
 
   @override
   String get rommNotAvailable => 'This server has no RomM library.';

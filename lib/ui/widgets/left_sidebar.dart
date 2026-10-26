@@ -52,6 +52,7 @@ import '../navigation/app_router.dart';
 import 'offline_aware_image.dart';
 import 'paced_network_image.dart';
 import 'adaptive/sf_symbol.dart';
+import '../../sombrio/sombrio_music.dart';
 
 const _kExpandedWidthDesktop = 240.0;
 const _kExpandedWidthMobile = 260.0;
@@ -1081,6 +1082,19 @@ class _LeftSidebarState extends State<LeftSidebar> with RouteAware {
                       }
                       _markNavigationAwayFromSidebar();
                       context.navigateTopLevel(Destinations.liveTvGuide);
+                    },
+                  ),
+                // Sombrio: the music player, sombrAMP
+                if (!_kidsMode)
+                  _SidebarItem(
+                    key: const ValueKey('sidebar-music'),
+                    icon: Icons.music_note_rounded,
+                    label: l10n.music,
+                    baseColor: nextMainSidebarColor(),
+                    showLabel: _showLabels,
+                    onPressed: () {
+                      _onNavigate();
+                      SombrioMusic.instance.open();
                     },
                   ),
                 if (showFolders)

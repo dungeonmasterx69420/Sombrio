@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/services/app_update_service.dart';
 import '../../l10n/app_localizations.dart';
+import '../../sombrio/sombrio_updates.dart';
 import '../../util/platform_detection.dart';
 import 'track_selector_dialog.dart';
 
@@ -66,6 +67,12 @@ Future<void> showAppUpdateDialog(
   );
 
   if (choice == null || !context.mounted) return;
+
+  // Sombrio: downloads the APK and opens Android's installer
+  if (choice == 'download' && Platform.isAndroid) {
+    await SombrioUpdates.install(context, update.downloadUri);
+    return;
+  }
 
   if (choice == 'download' &&
       Platform.isWindows &&

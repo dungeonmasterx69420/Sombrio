@@ -28,14 +28,11 @@ fun loadAndroidTvVersionName(rootDir: File, fallback: String): String {
 plugins {
     id("com.android.application")
     // START: FlutterFire Configuration
-    // Applied only for a normal build. google-services.json lists clients for
-    // the real application ids, so a test build under MOONFIN_TEST_ID_SUFFIX
-    // (see productFlavors) would fail with "No matching client found". Skipping
-    // it there is safe because push messaging bails immediately on TV anyway -
-    // push_messaging_service.dart:38 returns unless PlatformDetection.isMobile,
-    // and the initializeApp call is try/caught regardless.
-    id("com.google.gms.google-services")
-        .apply(System.getenv("MOONFIN_TEST_ID_SUFFIX").isNullOrEmpty())
+    // Not applied in Sombrio: google-services.json is Moonfin's Firebase project,
+    // which has no client for Sombrio's application id, and its pushes come from
+    // Moonfin's server plugin. Without it Firebase.initializeApp fails, which
+    // push_messaging_service.dart catches, so push messaging stays off.
+    id("com.google.gms.google-services").apply(false)
     // END: FlutterFire Configuration
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -79,8 +76,10 @@ android {
 
     flavorDimensions += "device"
     productFlavors {
-        val baseAppId = "org.moonfin.androidtv"
-        val baseAppName = "Moonfin"
+        // Sombrio's: it installs over the Sombrio builds before it, which were
+        // built on Findroid, and next to Moonfin.
+        val baseAppId = "wtf.sombra.sombrio"
+        val baseAppName = "Sombrio"
         // Optional application-id suffix for on-device testing, set through the
         // environment so an unset build is byte-identical to before:
         //   MOONFIN_TEST_ID_SUFFIX=.hwtest flutter build apk --flavor androidTv --debug
@@ -196,6 +195,8 @@ dependencies {
     implementation("eu.simonbinder:sqlite3-native-library:3.52.0")
     implementation("androidx.tvprovider:tvprovider:1.1.0")
     implementation("androidx.work:work-runtime-ktx:2.12.0")
+    // Sombrio: the Music tab's output switcher (wtf/sombra/sombrio/SombrioChannels.kt) needs 1.6 or newer
+    implementation("androidx.mediarouter:mediarouter:1.7.0")
 }
 
 val flutterApkOutputDir = layout.buildDirectory.dir("app/outputs/flutter-apk")

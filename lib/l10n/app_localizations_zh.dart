@@ -2134,7 +2134,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get shortcutToggleFullscreen => 'Fullscreen on or off';
 
   @override
-  String get shortcutQuit => 'Quit Moonfin';
+  String get shortcutQuit => 'Quit Sombrio';
 
   @override
   String get shortcutPlayPause => 'Play or pause';
@@ -2304,7 +2304,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get bookReadingUnavailableMessage =>
-      'Open it in Moonfin on a phone, tablet or computer to read it. Audiobooks still play here.';
+      'Open it in Sombrio on a phone, tablet or computer to read it. Audiobooks still play here.';
 
   @override
   String formatCannotRenderInApp(String extension) {
@@ -14297,7 +14297,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get smartDownloadsEnableDescription =>
-      'When you finish an episode on any device, Moonfin downloads the next ones. Episodes it downloads are deleted once watched.';
+      'When you finish an episode on any device, Sombrio downloads the next ones. Episodes it downloads are deleted once watched.';
 
   @override
   String get smartDownloadsKeepReady => 'Episodes to Keep Downloaded';
@@ -14593,7 +14593,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get topShelfDescription =>
-      'What the Apple TV home screen shows above the Moonfin icon when it is selected. This setting stays on this device.';
+      'What the Apple TV home screen shows above the Sombrio icon when it is selected. This setting stays on this device.';
 
   @override
   String get topShelfLatestMedia => 'Latest media';
@@ -15293,7 +15293,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get rommUnlinkNote =>
-      'Unlinking stops Moonfin from using your RomM key. The key stays in RomM until you remove it from your API tokens there.';
+      'Unlinking stops Sombrio from using your RomM key. The key stays in RomM until you remove it from your API tokens there.';
 
   @override
   String get rommUnlink => 'Unlink';
@@ -15307,7 +15307,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get rommUnreachable =>
-      'Moonfin couldn\'t reach RomM. Try again in a moment.';
+      'Sombrio couldn\'t reach RomM. Try again in a moment.';
 
   @override
   String get rommNotAvailable => 'This server has no RomM library.';

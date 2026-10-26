@@ -5,6 +5,7 @@ import 'package:jellyfin_preference/jellyfin_preference.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../preference/user_preferences.dart';
+import '../../sombrio/sombrio_updates.dart';
 import '../../util/app_distribution.dart';
 
 enum DesktopUpdateCheckStatus {
@@ -47,7 +48,8 @@ class AppUpdateService {
   AppUpdateService(this._store, this._userPreferences);
 
   static const _latestReleaseHost = 'api.github.com';
-  static const _latestReleasePath = '/repos/Moonfin-Client/Moonfin-Core/releases/latest';
+  // Sombrio: its own releases (lib/sombrio/sombrio_updates.dart)
+  static const _latestReleasePath = SombrioUpdates.latestReleasePath;
   static const _checkCooldown = Duration(hours: 24);
 
   static const _lastCheckMsKey = 'app_update_last_check_ms';
@@ -228,7 +230,7 @@ class AppUpdateService {
       }
 
       final htmlUrl = decoded['html_url']?.toString() ??
-          'https://github.com/Moonfin-Client/Moonfin-Core/releases/latest';
+          'https://github.com${SombrioUpdates.latestReleasePath.replaceFirst('/repos', '')}';
 
       final assetsJson = decoded['assets'];
       final assets = <_ReleaseAsset>[];
@@ -260,9 +262,12 @@ class AppUpdateService {
     if (assets.isEmpty) return null;
 
     switch (AppDistribution.channel) {
+      // Sombrio: one APK per ABI, and only this device's will install
       case DistributionChannel.apk:
-        return _firstWhere(assets, '.apk', excludeSubstring: 'tv') ??
-            _firstByExtension(assets, const ['.apk']);
+        for (final asset in assets) {
+          if (SombrioUpdates.isApkForThisDevice(asset.name)) return asset;
+        }
+        return null;
       case DistributionChannel.androidTvApk:
         return _firstWhere(assets, '.apk', requireSubstring: 'tv') ??
             _firstByExtension(assets, const ['.apk']);
@@ -310,6 +315,10 @@ class AppUpdateService {
   }
 
   bool _isNewerVersion(String candidate, String current) {
+    // Sombrio: releases are tagged build-<number>
+    if (SombrioUpdates.buildOf(candidate) != null) {
+      return SombrioUpdates.isNewer(candidate);
+    }
     final candidateParts = _parseSemverCore(candidate);
     final currentParts = _parseSemverCore(current);
     final maxLength = candidateParts.length > currentParts.length

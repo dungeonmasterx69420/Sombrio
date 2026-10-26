@@ -1842,14 +1842,15 @@ class UserPreferences extends ChangeNotifier {
     defaultValue: true,
   );
 
+  // Sombrio: Live TV has a tab of its own, in place of Downloads
   static final showLiveTvButton = Preference(
     key: 'pref_show_live_tv_button',
-    defaultValue: false,
+    defaultValue: true,
   );
 
   static final showDownloadsButton = Preference(
     key: 'pref_show_downloads_button',
-    defaultValue: true,
+    defaultValue: false,
   );
 
   static final showAlphabeticalFilters = Preference(
@@ -1916,9 +1917,10 @@ class UserPreferences extends ChangeNotifier {
     defaultValue: false,
   );
 
+  // Sombrio: tabs at the bottom, as Sombrio had them before it was built on Moonfin
   static final navbarPosition = EnumPreference(
     key: 'pref_navbar_position',
-    defaultValue: NavbarPosition.top,
+    defaultValue: NavbarPosition.bottom,
     values: NavbarPosition.values,
   );
 
