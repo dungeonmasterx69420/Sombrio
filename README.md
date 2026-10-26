@@ -61,7 +61,8 @@ The **Sombrio builds** workflow (`.github/workflows/sombrio.yaml`) builds the ap
 per processor type to the run, on the repository's Actions tab. Most phones want **arm64-v8a**; older ones
 armeabi-v7a, and emulators x86_64.
 
-Builds of `main` that open on Android emulators are also published on the
+Builds of `main` that open on Android emulators, and whose Music tab signs in to a test Jellyfin server, plays a
+track and goes back to films and shows there (`integration_test/sombrio/music_drive.dart`), are also published on the
 [Releases](https://github.com/dungeonmasterx69420/Sombrio/releases) page, which needs no GitHub account, tagged
 `build-<number>`. Once installed, Sombrio offers newer releases itself, on startup and in Settings → About → Check for
 updates: it downloads the right APK and opens Android's installer, which updates the app in place. The Sombrio builds
