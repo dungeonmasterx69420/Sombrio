@@ -487,6 +487,11 @@ class ThemeSpec {
   /// `AppColorScheme.isPixel`. Mutually exclusive with [isGlass].
   final bool isPixel;
 
+  /// Sombrio: when `true`, corners are square ([AppRadius] and [AppShapes]
+  /// collapse to zero) without the rest of the pixel chrome. System S, the
+  /// default theme, has hard edges.
+  final bool squareCorners;
+
   const ThemeSpec({
     required this.id,
     required this.displayName,
@@ -501,6 +506,7 @@ class ThemeSpec {
     this.transparentNavbarSurface = false,
     this.isGlass = false,
     this.isPixel = false,
+    this.squareCorners = false,
   });
 
   /// Same spec with a different colour palette. Used by the OLED Mode
@@ -519,6 +525,7 @@ class ThemeSpec {
         transparentNavbarSurface: transparentNavbarSurface,
         isGlass: isGlass,
         isPixel: isPixel,
+        squareCorners: squareCorners,
       );
 
   factory ThemeSpec.fromJson(Map<String, dynamic> json) {
@@ -574,6 +581,7 @@ class ThemeSpec {
       transparentNavbarSurface: (json['transparentNavbarSurface'] as bool?) ?? false,
       isGlass: (json['isGlass'] as bool?) ?? false,
       isPixel: (json['isPixel'] as bool?) ?? false,
+      squareCorners: (json['squareCorners'] as bool?) ?? false,
     );
   }
 
@@ -590,6 +598,7 @@ class ThemeSpec {
         if (transparentNavbarSurface) 'transparentNavbarSurface': true,
         if (isGlass) 'isGlass': true,
         if (isPixel) 'isPixel': true,
+        if (squareCorners) 'squareCorners': true,
         'colors': colors.toJson(),
         'borders': borders.toJson(),
         'semantic': semantic.toJson(),

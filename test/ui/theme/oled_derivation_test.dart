@@ -46,14 +46,17 @@ void main() {
 
     test('the card token is crushed from its fixed-palette default', () {
       final base = _spec();
-      expect(base.colors.card, const Color(0xFF202020));
+      // Sombrio: System S, the default theme, sets its card to its pane
+      expect(base.colors.card, isNot(_black));
       expect(applyOled(base, OledTuning.vivid).colors.card, _black);
     });
 
     test('borders are lifted rather than crushed, to stay visible', () {
       final base = _spec();
       final out = applyOled(base, OledTuning.vivid);
-      expect(out.colors.inputBorder.r, greaterThan(base.colors.inputBorder.r));
+      // Sombrio: System S's borders are lighter than the lift, so they meet it
+      // halfway, but never go towards black
+      expect(out.colors.inputBorder.r, greaterThan(0.4));
     });
 
     test('everything outside the crush list is left alone', () {

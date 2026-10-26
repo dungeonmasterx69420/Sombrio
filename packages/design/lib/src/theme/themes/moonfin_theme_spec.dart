@@ -1,49 +1,79 @@
 import 'package:flutter/material.dart';
 
-import '../app_colors.dart';
 import '../theme_spec.dart';
+
+// Sombrio: Moonfin's default theme is System S, the design system behind sombra.wtf, as sombrAMP draws it
+// (music/sombrAMP/lib/sombra/system_s.dart): ink on black, hard 1px edges and square corners, and one phosphor,
+// amber, for whatever is live. System S has no red: problems are drawn in ink. The id stays Moonfin's, so saved
+// settings and Moonfin's code that looks for its default theme keep working. Titles are set in Pixelify Sans by
+// lib/sombrio/system_s_theme.dart.
+const _desk = Color(0xFF0A0A0A);
+const _pane = Color(0xFF0E0E0E);
+const _well = Color(0xFF070707);
+const _ink = Color(0xFFEDEDED);
+const _muted = Color(0xFFA3A3A3);
+const _faint = Color(0xFF6A6A6A);
+const _idle = Color(0xFF4A4A4A);
+const _inset = Color(0xFF2A2A2A);
+const _hover = Color(0xFF1B1B1B);
+const _phosphor = Color(0xFFFFB000);
 
 const moonfinThemeSpec = ThemeSpec(
   id: 'moonfin',
-  displayName: 'Moonfin',
+  displayName: 'System S',
+  fontFamily: 'packages/finamp/IBMPlexMono',
+  squareCorners: true,
+  semantic: ThemeSemanticTokens(
+    statusAvailable: _phosphor,
+    statusRequested: _muted,
+    statusPending: _muted,
+    statusDownloading: _phosphor,
+    statusError: _ink,
+    mediaTypeBadgeMovie: _hover,
+    mediaTypeBadgeShow: _hover,
+  ),
   colors: ThemeColorTokens(
-    background: AppColors.black700,
-    onBackground: AppColors.white,
-    surface: AppColors.black500,
-    onSurface: AppColors.white,
-    surfaceVariant: Color(0xFF252525),
-    scrim: Color(0xCC000000),
-    accent: AppColors.cyan500,
-    onAccent: AppColors.white,
-    buttonNormal: Color(0xFF2A2A2A),
-    buttonFocused: AppColors.white,
-    buttonDisabled: Color(0xFF1E1E1E),
-    buttonActive: Color(0xFF3A3A3A),
-    onButtonNormal: AppColors.white,
-    onButtonFocused: AppColors.cyan500,
-    onButtonDisabled: Color(0xFF666666),
-    inputBackground: Color(0xFF2A2A2A),
-    inputFocused: Color(0xFF3A3A3A),
-    inputBorder: Color(0xFF404040),
-    inputBorderFocused: AppColors.cyan500,
-    rangeTrack: Color(0xFF404040),
-    rangeProgress: AppColors.cyan500,
-    rangeThumb: AppColors.cyan500,
-    seekbarBuffered: Color(0x80FFFFFF),
-    badgeBackground: AppColors.cyan500,
-    onBadge: AppColors.white,
-    badgeUnplayed: AppColors.cyan500,
-    badgeWatched: AppColors.green500,
-    recordingActive: AppColors.red500,
-    recordingScheduled: AppColors.orange500,
+    background: _desk,
+    onBackground: _ink,
+    surface: _pane,
+    onSurface: _ink,
+    surfaceVariant: _hover,
+    scrim: Color(0x8C000000),
+    accent: _phosphor,
+    onAccent: _desk,
+    // Buttons are panes edged in ink, and invert when they have the focus
+    buttonNormal: _hover,
+    buttonFocused: _ink,
+    buttonDisabled: _pane,
+    buttonActive: _inset,
+    onButtonNormal: _ink,
+    onButtonFocused: _desk,
+    onButtonDisabled: _faint,
+    inputBackground: _well,
+    inputFocused: _hover,
+    inputBorder: _muted,
+    inputBorderFocused: _phosphor,
+    rangeTrack: _inset,
+    rangeProgress: _phosphor,
+    rangeThumb: _phosphor,
+    seekbarBuffered: _idle,
+    badgeBackground: _phosphor,
+    onBadge: _desk,
+    badgeUnplayed: _phosphor,
+    badgeWatched: _phosphor,
+    recordingActive: _phosphor,
+    recordingScheduled: _muted,
+    error: _ink,
+    card: _pane,
   ),
   borders: ThemeBorderTokens(
-    cardBorder: BorderSide(color: Colors.transparent),
-    chipBorder: BorderSide(color: Color(0x558EC8F0)),
-    focusBorder: BorderSide(color: AppColors.cyan500, width: 2),
-    cardRadius: BorderRadius.all(Radius.circular(8)),
-    chipRadius: BorderRadius.all(Radius.circular(999)),
-    chipBackground: Color(0x1F8EC8F0),
+    cardBorder: BorderSide(color: _idle),
+    chipBorder: BorderSide(color: _ink),
+    focusBorder: BorderSide(color: _phosphor, width: 2),
+    cardRadius: BorderRadius.zero,
+    chipRadius: BorderRadius.zero,
+    chipBackground: _pane,
+    navBorder: BorderSide(color: _ink),
     focusGlow: [],
   ),
 );

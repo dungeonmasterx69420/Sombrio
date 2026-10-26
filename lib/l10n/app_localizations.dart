@@ -1123,13 +1123,13 @@ abstract class AppLocalizations {
   /// Display name for the Moonfin theme
   ///
   /// In en, this message translates to:
-  /// **'Moonfin'**
+  /// **'System S'**
   String get themeMoonfin;
 
   /// Preview description for the Moonfin theme
   ///
   /// In en, this message translates to:
-  /// **'The original clean Moonfin default.'**
+  /// **'Sombrio\'s look: ink on black, hard edges and an amber phosphor.'**
   String get themeMoonfinSubtitle;
 
   /// Display name for the Neon Pulse theme

@@ -5,6 +5,7 @@ import 'package:moonfin_design/moonfin_design.dart';
 
 import '../../preference/preference_constants.dart';
 import '../../preference/user_preferences.dart';
+import '../../sombrio/system_s_theme.dart';
 import '../../util/idiom/app_ui_idiom.dart';
 
 class AppTheme {
@@ -16,6 +17,10 @@ class AppTheme {
       brightness: Brightness.dark,
       fontFamily: spec.fontFamily,
     ).textTheme;
+    // Sombrio: System S, the default theme, sets titles in Pixelify Sans
+    if (spec.id == ThemeRegistry.moonfinId) {
+      return systemSTextTheme(base);
+    }
     if (spec.textGlow.isEmpty) {
       return base;
     }
@@ -65,14 +70,16 @@ class AppTheme {
     // Pixel themes use blocky zero-radius chrome; other themes stay rounded.
     // Apple idioms get continuous-corner squircles instead of round-rects.
     final pixel = spec.isPixel;
+    // Sombrio: System S has square corners too, without the pixel chrome
+    final square = pixel || spec.squareCorners;
     final apple = AppUiIdiomResolver.current != AppUiIdiom.material;
-    final OutlinedBorder buttonShape = pixel
+    final OutlinedBorder buttonShape = square
         ? const RoundedRectangleBorder(borderRadius: BorderRadius.zero)
         : apple
             ? AppShapes.squircle(AppShapes.small)
             : JellyfinTokens.shapes.smallShape;
     final inputRadius =
-        pixel ? BorderRadius.zero : JellyfinTokens.shapes.smallRadius;
+        square ? BorderRadius.zero : JellyfinTokens.shapes.smallRadius;
     return ThemeData(
       useMaterial3: true,
       platform: switch (AppUiIdiomResolver.current) {
@@ -169,7 +176,7 @@ class AppTheme {
       textTheme: _buildTextTheme(spec),
       chipTheme: ChipThemeData(
         backgroundColor: c.buttonNormal,
-        shape: pixel ? buttonShape : JellyfinTokens.shapes.extraLargeShape,
+        shape: square ? buttonShape : JellyfinTokens.shapes.extraLargeShape,
       ),
       dialogTheme: DialogThemeData(
         backgroundColor: spec.isGlass ? const Color(0xD90E1117) : c.surface,

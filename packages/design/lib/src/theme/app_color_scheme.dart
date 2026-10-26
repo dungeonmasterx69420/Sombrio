@@ -18,6 +18,10 @@ class AppColorScheme {
   /// widgets. Mutually exclusive with [isGlass].
   static bool get isPixel => ThemeRegistry.active.isPixel;
 
+  /// Sombrio: square corners, under the pixel theme and System S.
+  static bool get isSquare =>
+      ThemeRegistry.active.isPixel || ThemeRegistry.active.squareCorners;
+
   // Background & Surface
   static Color get background => ThemeRegistry.active.colors.background;
   static Color get onBackground => ThemeRegistry.active.colors.onBackground;

@@ -3,8 +3,9 @@ import 'package:moonfin_design/moonfin_design.dart';
 
 const _kCardRadius = 20.0;
 const _kCardMaxWidth = 700.0;
-const _kMoonfinCardColor = Color(0xCC111528);
-const _kMoonfinCardBorderColor = Color(0x33FFFFFF);
+// Sombrio: System S's window, a pane edged in ink, on the desk
+const _kMoonfinCardColor = Color(0xFF0E0E0E);
+const _kMoonfinCardBorderColor = Color(0xFFEDEDED);
 
 class LoginScaffold extends StatelessWidget {
   final double maxWidth;
@@ -24,7 +25,7 @@ class LoginScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMoonfin = ThemeRegistry.active.id == ThemeRegistry.moonfinId;
     final gradientColors = isMoonfin
-        ? const [Color(0xFF0a0a0a), Color(0xFF1a1a2e), Color(0xFF16213e)]
+        ? const [Color(0xFF0A0A0A), Color(0xFF0A0A0A), Color(0xFF0A0A0A)]
         : [
             AppColorScheme.background,
             AppColorScheme.surfaceVariant,

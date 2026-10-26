@@ -1,9 +1,10 @@
 This privacy policy pertains to the Sombrio app.
 
-Sombrio does not collect any personal information. It connects to the media servers you sign in to (Jellyfin, or for
-music also Navidrome and other Subsonic servers), to GitHub to look for newer builds of the app, and, when your server
-has no lyrics for a song, to LRCLIB (lrclib.net), which it sends the song's title, artist, album and length. Looking up
-lyrics on LRCLIB can be turned off in the music player's settings (Layout & Theme, Lyrics). No identifying information or
-user data of any kind is made available to anyone else.
+Sombrio does not collect any personal information. It connects to the media servers you sign in to (Jellyfin or Emby,
+or for music also Navidrome and other Subsonic servers), to GitHub to look for newer builds of the app, and, when your
+server has no lyrics for a song, to LRCLIB (lrclib.net), which it sends the song's title, artist, album and length.
+Looking up lyrics on LRCLIB can be turned off in the music player's settings (Layout & Theme, Lyrics). Services you
+choose to use, like ratings from MDBList or TMDB or requests through Seerr, are reached through your server or with
+the keys you give them. No identifying information or user data of any kind is made available to anyone else.
 
-Sombrio is built on Findroid, by Jarne Demeulemeester, and sombrAMP, which is built on Finamp.
+Sombrio is built on Moonfin and sombrAMP, which is built on Finamp.

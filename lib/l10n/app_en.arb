@@ -721,11 +721,11 @@
   "@gamepadNavigationDescription": {
     "description": "Settings subtitle for the gamepad navigation switch"
   },
-  "themeMoonfin": "Moonfin",
+  "themeMoonfin": "System S",
   "@themeMoonfin": {
     "description": "Display name for the Moonfin theme"
   },
-  "themeMoonfinSubtitle": "The original clean Moonfin default.",
+  "themeMoonfinSubtitle": "Sombrio's look: ink on black, hard edges and an amber phosphor.",
   "@themeMoonfinSubtitle": {
     "description": "Preview description for the Moonfin theme"
   },

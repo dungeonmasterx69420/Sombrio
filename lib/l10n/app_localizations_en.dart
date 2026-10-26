@@ -618,10 +618,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'Let a connected game controller move focus and select items';
 
   @override
-  String get themeMoonfin => 'Moonfin';
+  String get themeMoonfin => 'System S';
 
   @override
-  String get themeMoonfinSubtitle => 'The original clean Moonfin default.';
+  String get themeMoonfinSubtitle =>
+      'Sombrio\'s look: ink on black, hard edges and an amber phosphor.';
 
   @override
   String get themeNeonPulse => 'Neon Pulse';
