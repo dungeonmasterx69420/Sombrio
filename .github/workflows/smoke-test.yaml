@@ -16,8 +16,13 @@ on:
 
 jobs:
   emulator:
-    name: Emulator
+    name: Android API ${{ matrix.api-level }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # From Sombrio's minimum (29) to the newest
+        api-level: [29, 31, 34, 35, 36, 37]
     steps:
       - name: Clone repository
         uses: actions/checkout@v6
@@ -43,17 +48,17 @@ jobs:
       - name: Open Sombrio
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 35
+          api-level: ${{ matrix.api-level }}
           arch: x86_64
           target: google_apis
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           disable-animations: true
-          script: bash .github/scripts/smoke-test.sh sombrio.apk
+          script: bash .github/scripts/smoke-test.sh sombrio.apk night
 
       - uses: actions/upload-artifact@v6
         if: always()
         with:
-          name: smoke-test
+          name: smoke-test-api-${{ matrix.api-level }}
           path: |
             logcat.txt
             screen.png

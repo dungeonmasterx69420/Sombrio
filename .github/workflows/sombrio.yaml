@@ -145,6 +145,12 @@ jobs:
           path: apks/*.apk
           compression-level: 0 # an APK is already compressed
 
+      # R8 renames classes in release builds; its mapping turns a crash's stack trace back into readable names
+      - uses: actions/upload-artifact@v6
+        with:
+          name: sombrio-mapping
+          path: app/phone/build/outputs/mapping/libreRelease/mapping.txt
+
   release:
     name: Release
     needs: android
