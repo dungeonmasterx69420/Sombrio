@@ -3,9 +3,10 @@ name: Sombrio builds
 # Release builds of Sombrio for Android: Moonfin's Flutter app, with the Music tab, sombrAMP (music/sombrAMP), as a
 # package of it. Every run uploads one APK per ABI as artifacts.
 #
-# Builds of main whose APKs are signed with the key from the secrets, and that open on Android emulators
-# (smoke-test.yaml), are also published as GitHub releases tagged build-<number>. The app offers them as updates
-# (lib/sombrio/sombrio_updates.dart), as the Sombrio builds before Moonfin did. The five newest are kept.
+# Builds of main whose APKs are signed with the key from the secrets, that open on Android emulators (smoke-test.yaml)
+# and whose Music tab plays (the music job), are also published as GitHub releases tagged build-<number>. The app
+# offers them as updates (lib/sombrio/sombrio_updates.dart), as the Sombrio builds before Moonfin did. The five newest
+# are kept.
 #
 # Optional repository secrets:
 #   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
@@ -152,9 +153,75 @@ jobs:
     with:
       artifact: sombrio-android
 
+  # The Music tab, on an emulator, against a Jellyfin server of its own: signs in, plays a track and goes back to films
+  # and shows (integration_test/sombrio/music_drive.dart). Each build has to pass it before it's released as well.
+  music:
+    name: Music on Android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v6
+        with:
+          submodules: true
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Free up disk space
+        run: sudo rm -rf /usr/share/dotnet /usr/share/swift /usr/local/.ghcup /usr/local/julia* /usr/local/share/powershell
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Generate sombrAMP's translations
+        working-directory: music/sombrAMP
+        run: flutter gen-l10n
+
+      # Sombrio as released, but started by the driver, for the emulator, which reaches the runner at 10.0.2.2
+      - name: Build the APK
+        run: |
+          flutter build apk --release --flavor mobile --target-platform android-x64 \
+            -t integration_test/sombrio/music_drive.dart \
+            --dart-define=SOMBRIO=true \
+            --dart-define=DRIVE_URL=http://10.0.2.2:8096
+
+      - name: Start a Jellyfin server
+        run: bash .github/scripts/jellyfin-test-server.sh "$RUNNER_TEMP/jellyfin"
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' |
+            sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Play music
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          disable-animations: true
+          script: bash .github/scripts/music-check.sh build/app/outputs/flutter-apk/app-mobile-release.apk
+
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: music-check
+          path: |
+            music-logcat.txt
+            music-*.png
+
   release:
     name: Release
-    needs: [android, smoke-test]
+    needs: [android, smoke-test, music]
     if: github.ref == 'refs/heads/main' && needs.android.outputs.signed == 'true'
     runs-on: ubuntu-latest
     permissions:

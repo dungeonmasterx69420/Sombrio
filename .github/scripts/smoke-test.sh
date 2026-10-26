@@ -7,8 +7,7 @@
 #
 # With "night", the emulator is in dark mode first, as most phones are.
 #
-# The Music tab, sombrAMP, runs in the same Flutter engine as the rest of the app and only opens once signed in, so
-# opening the app is as far as this gets without a server.
+# Opening the app is as far as this gets without a server. music-check.sh goes on to the Music tab, against one.
 set -uo pipefail
 
 apk="$1"
