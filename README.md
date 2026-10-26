@@ -23,7 +23,7 @@ Both sides look the same: ink on black (dark is the default) or on paper white, 
 Pixelify Sans and IBM Plex Mono, and one phosphor colour that marks whatever is live.
 
 > [!IMPORTANT]
-> You **need** access to a [Jellyfin](https://jellyfin.org) server. Music can also come from a
+> You **need** access to a [Jellyfin](https://jellyfin.org) server, version 10.11 or newer. Music can also come from a
 > [Navidrome](https://www.navidrome.org) or other Subsonic server. Sombrio plays your own media and doesn't connect to
 > any streaming service.
 

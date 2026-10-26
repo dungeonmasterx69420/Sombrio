@@ -6,6 +6,7 @@ import dev.jdtech.jellyfin.settings.domain.Constants
 import java.util.UUID
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
+import okhttp3.OkHttpClient
 import org.jellyfin.sdk.api.client.HttpClientOptions
 import org.jellyfin.sdk.api.client.extensions.authenticationApi
 import org.jellyfin.sdk.api.client.extensions.brandingApi
@@ -22,8 +23,10 @@ import org.jellyfin.sdk.api.client.extensions.userApi
 import org.jellyfin.sdk.api.client.extensions.userDataApi
 import org.jellyfin.sdk.api.client.extensions.userViewApi
 import org.jellyfin.sdk.api.client.extensions.videoApi
+import org.jellyfin.sdk.api.okhttp.OkHttpFactory
 import org.jellyfin.sdk.createJellyfin
 import org.jellyfin.sdk.model.ClientInfo
+import org.jellyfin.sdk.model.ServerVersion
 
 /**
  * Jellyfin API class using org.jellyfin.sdk:jellyfin-core
@@ -48,6 +51,10 @@ class JellyfinApi(
                 version = BuildConfig.VERSION_NAME,
             )
         context = androidContext
+        // The SDK wants Jellyfin 12, but 10.11 works too, with LegacyServerInterceptor
+        minimumServerVersion = ServerVersion(10, 11, 0)
+        apiClientFactory =
+            OkHttpFactory(OkHttpClient.Builder().addInterceptor(LegacyServerInterceptor()).build())
     }
     val api =
         jellyfin.createApi(
