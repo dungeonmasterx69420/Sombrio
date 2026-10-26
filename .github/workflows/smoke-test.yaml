@@ -1,0 +1,59 @@
+name: Smoke test
+
+# Opens a released Sombrio on an Android emulator and checks that it starts (.github/scripts/smoke-test.sh). When it
+# doesn't, the run fails with the crash, and logcat and a screenshot are attached to it.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The release to test, like build-113 (the latest when empty)
+        required: false
+  push:
+    paths:
+      - .github/workflows/smoke-test.yaml
+      - .github/scripts/smoke-test.sh
+
+jobs:
+  emulator:
+    name: Emulator
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v6
+
+      - name: Download the APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          if [ -z "$TAG" ]; then TAG="$(gh release view --json tagName --jq .tagName)"; fi
+          gh release download "$TAG" --pattern '*-x86_64.apk' --output sombrio.apk
+          echo "Testing $TAG" >> "$GITHUB_STEP_SUMMARY"
+
+      # The emulator needs hardware acceleration
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' |
+            sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Open Sombrio
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          disable-animations: true
+          script: bash .github/scripts/smoke-test.sh sombrio.apk
+
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: smoke-test
+          path: |
+            logcat.txt
+            screen.png
