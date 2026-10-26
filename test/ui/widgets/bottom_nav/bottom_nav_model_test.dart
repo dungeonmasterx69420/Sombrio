@@ -4,13 +4,15 @@ import 'package:moonfin/ui/widgets/bottom_nav/bottom_nav_model.dart';
 
 void main() {
   group('resolveBarItems', () {
+    // Sombrio: the automatic pins are Libraries, Live TV (off in these
+    // gates) and Music, then Moonfin's
     test('Home, the pins and You, with slots in order', () {
       final items = resolveBarItems(const BottomNavTabGates(), '');
       expect(items, const [
         BottomNavBarItem.home(),
-        BottomNavBarItem.tab(BottomNavTab.search, 1),
-        BottomNavBarItem.tab(BottomNavTab.libraries, 2),
-        BottomNavBarItem.tab(BottomNavTab.favorites, 3),
+        BottomNavBarItem.tab(BottomNavTab.libraries, 1),
+        BottomNavBarItem.tab(BottomNavTab.music, 2),
+        BottomNavBarItem.tab(BottomNavTab.search, 3),
         BottomNavBarItem.you(4),
       ]);
     });
@@ -23,8 +25,8 @@ void main() {
       );
       expect(items, const [
         BottomNavBarItem.home(),
-        BottomNavBarItem.tab(BottomNavTab.search, 1),
-        BottomNavBarItem.tab(BottomNavTab.favorites, 3),
+        BottomNavBarItem.tab(BottomNavTab.music, 2),
+        BottomNavBarItem.tab(BottomNavTab.search, 3),
         BottomNavBarItem.you(4),
       ]);
     });
@@ -35,7 +37,7 @@ void main() {
         '',
         withoutSearch: true,
       );
-      expect(items.map((i) => i.id), ['home', 'libraries', 'favorites', 'you']);
+      expect(items.map((i) => i.id), ['home', 'libraries', 'music', 'you']);
     });
   });
 
@@ -99,6 +101,7 @@ void main() {
     test('holds everything offered that isn\'t on the bar', () {
       expect(tiles(saved: true, syncPlay: true, quickConnect: true), const [
         BottomNavHubTile.action(BottomNavHubAction.saved),
+        BottomNavHubTile.tab(BottomNavTab.favorites),
         BottomNavHubTile.tab(BottomNavTab.genres),
         BottomNavHubTile.action(BottomNavHubAction.shuffle),
         BottomNavHubTile.action(BottomNavHubAction.syncPlay),

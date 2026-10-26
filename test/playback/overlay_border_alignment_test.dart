@@ -110,7 +110,8 @@ void main() {
     );
 
     final boxDecoration = overlayContainer.decoration as BoxDecoration;
-    expect(boxDecoration.borderRadius, BorderRadius.circular(28));
+    // Sombrio: the Moonfin theme is System S, whose corners are square
+    expect(boxDecoration.borderRadius, BorderRadius.zero);
     expect(boxDecoration.border, isNotNull);
   });
 

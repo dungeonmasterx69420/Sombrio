@@ -98,7 +98,7 @@ class BottomNavTabGates {
         BottomNavTab.liveTv => !kidsMode && showLiveTv,
         BottomNavTab.discover => !kidsMode && showSeerr && seerrAvailable,
         BottomNavTab.folders => folderView,
-        BottomNavTab.music => true,
+        BottomNavTab.music => !kidsMode,
       };
 
   /// The tabs the bar shows between Home and You. Automatic pins follow the

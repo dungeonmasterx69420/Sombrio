@@ -53,20 +53,21 @@ void main() {
   });
 
   group('automatic pins', () {
-    test('default settings pin Search, Libraries and Favorites', () {
-      expect(const BottomNavTabGates().resolvePins(''), [
-        BottomNavTab.search,
+    // Sombrio: Libraries, Live TV and Music come first
+    test('default settings pin Libraries, Live TV and Music', () {
+      expect(const BottomNavTabGates(showLiveTv: true).resolvePins(''), [
         BottomNavTab.libraries,
-        BottomNavTab.favorites,
+        BottomNavTab.liveTv,
+        BottomNavTab.music,
       ]);
     });
 
     test('a turned off button is skipped for the next offered tab', () {
-      const gates = BottomNavTabGates(showFavorites: false, showLiveTv: true);
+      const gates = BottomNavTabGates(showLibraries: false, showLiveTv: true);
       expect(gates.resolvePins(''), [
-        BottomNavTab.search,
-        BottomNavTab.libraries,
         BottomNavTab.liveTv,
+        BottomNavTab.music,
+        BottomNavTab.search,
       ]);
     });
 
@@ -84,9 +85,13 @@ void main() {
     });
 
     test('Seerr only counts once the plugin reports it available', () {
-      const without = BottomNavTabGates(showLibraries: false);
+      const without = BottomNavTabGates(
+        showLibraries: false,
+        showFavorites: false,
+      );
       const withSeerr = BottomNavTabGates(
         showLibraries: false,
+        showFavorites: false,
         seerrAvailable: true,
       );
       expect(without.resolvePins(''), isNot(contains(BottomNavTab.discover)));
@@ -129,10 +134,11 @@ void main() {
         prefs,
         seerrAvailable: false,
       );
+      // Sombrio: Live TV's button is on by default
       expect(gates.resolvePins(prefs.get(UserPreferences.bottomNavbarTabs)), [
-        BottomNavTab.search,
         BottomNavTab.libraries,
-        BottomNavTab.genres,
+        BottomNavTab.liveTv,
+        BottomNavTab.music,
       ]);
 
       // Other constructor steps seed their own keys, so only the navbar's

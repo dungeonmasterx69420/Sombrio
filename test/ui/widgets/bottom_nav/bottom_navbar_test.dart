@@ -92,11 +92,13 @@ void main() {
       await tester.pump();
 
       expect(find.byType(DockBarView), findsOneWidget);
-      // Libraries waits for a library to exist, the fake server has none.
-      for (final label in ['Home', 'Search', 'Favorites', 'You']) {
+      // Libraries waits for a library to exist, the fake server has none, and
+      // Live TV for a Live TV library. Sombrio: Music is always there.
+      for (final label in ['Home', 'Music', 'You']) {
         expect(find.text(label), findsOneWidget, reason: label);
       }
       expect(find.text('Libraries'), findsNothing);
+      expect(find.text('Live TV'), findsNothing);
     });
 
     testWidgets('the mini player floats above the tabs', (tester) async {
@@ -200,6 +202,8 @@ void main() {
     testWidgets('a new screen springs the indicator over from the last tab',
         (tester) async {
       usePhoneView(tester);
+      // Sombrio: Search isn't one of the automatic pins
+      await prefs.set(UserPreferences.bottomNavbarTabs, 'search,favorites');
       await tester.pumpWidget(bottomNavApp(activeRoute: '/home'));
       await tester.pump();
 

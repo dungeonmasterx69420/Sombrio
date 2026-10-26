@@ -141,6 +141,8 @@ void main() {
     final getIt = GetIt.instance;
     getIt.registerSingleton<PreferenceStore>(store);
     getIt.registerSingleton<UserPreferences>(UserPreferences(store));
+    // Sombrio: the downloads button is off by default
+    await getIt<UserPreferences>().set(UserPreferences.showDownloadsButton, true);
     getIt.registerSingleton<UserRepository>(_FakeUserRepository());
     getIt.registerSingleton<UserViewsRepository>(_FakeUserViewsRepository());
     getIt.registerSingleton<PluginSyncService>(_FakePluginSyncService());
