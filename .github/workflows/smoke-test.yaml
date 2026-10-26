@@ -1,0 +1,77 @@
+name: Smoke test
+
+# Opens Sombrio and its Music tab on Android emulators, in dark mode as most phones are, and checks that both start
+# (.github/scripts/smoke-test.sh). When it doesn't, the run fails with the crash, and logcat and a screenshot are
+# attached to it.
+#
+# The Sombrio builds workflow runs it on every build, before publishing it. It can also be run on a release.
+
+on:
+  workflow_call:
+    inputs:
+      artifact:
+        description: The artifact of the calling run with the APKs
+        type: string
+        required: true
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The release to test, like build-113 (the latest when empty)
+        required: false
+
+jobs:
+  emulator:
+    name: Android API ${{ matrix.api-level }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # From Sombrio's minimum, Android 10, to the newest with an emulator
+        api-level: [29, 31, 34, 35, 36]
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v6
+
+      - name: Download the APKs of this build
+        if: inputs.artifact != ''
+        uses: actions/download-artifact@v7
+        with:
+          name: ${{ inputs.artifact }}
+          path: apks
+
+      - name: Download the APKs of a release
+        if: inputs.artifact == ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          if [ -z "$TAG" ]; then TAG="$(gh release view --json tagName --jq .tagName)"; fi
+          gh release download "$TAG" --pattern '*-x86_64.apk' --dir apks
+          echo "Testing $TAG" >> "$GITHUB_STEP_SUMMARY"
+
+      # The emulator needs hardware acceleration
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' |
+            sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Open Sombrio
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86_64
+          target: google_apis
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          disable-animations: true
+          script: bash .github/scripts/smoke-test.sh apks/*-x86_64.apk night
+
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: smoke-test-api-${{ matrix.api-level }}
+          path: |
+            logcat*.txt
+            screen*.png
