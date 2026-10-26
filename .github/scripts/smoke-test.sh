@@ -20,7 +20,8 @@ echo "Android $(adb shell getprop ro.build.version.release) (API $(adb shell get
 if [ "$night" = night ]; then
   adb shell cmd uimode night yes
 fi
-adb install -r "$apk"
+# With its runtime permissions granted, so that Android 13 and up don't ask for notifications in front of it
+adb install -r -g "$apk"
 
 adb logcat -c
 adb shell monkey -p "$package" -c android.intent.category.LAUNCHER 1 > /dev/null
