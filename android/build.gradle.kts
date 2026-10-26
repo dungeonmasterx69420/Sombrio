@@ -26,6 +26,16 @@ subprojects {
         }
     }
 }
+// sombrAMP's Discord status (flutter_discord_rpc) is only on desktops, and its
+// Rust build calls Project.exec(), which Gradle 9 removed, so its Android
+// library, which sombrAMP never loads there, isn't built.
+subprojects {
+    if (name == "flutter_discord_rpc") {
+        tasks.configureEach {
+            if (name.startsWith("cargokitCargoBuild")) enabled = false
+        }
+    }
+}
 subprojects {
     project.evaluationDependsOn(":app")
 }
