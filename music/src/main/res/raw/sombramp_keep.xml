@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- sombrAMP looks these up by name for its media notification, so resource shrinking must keep them -->
-<resources xmlns:tools="http://schemas.android.com/tools"
-    tools:keep="@drawable/baseline_*,@drawable/tabler_icons_*,@mipmap/white" />
