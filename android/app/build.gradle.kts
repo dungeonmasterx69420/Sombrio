@@ -92,13 +92,16 @@ android {
         // installs alongside instead and touches nothing.
         val testIdSuffix = System.getenv("MOONFIN_TEST_ID_SUFFIX").orEmpty()
         val mobileAbis = listOf("arm64-v8a", "armeabi-v7a", "x86_64")
+        // Sombrio: its builds are one APK per ABI (flutter build apk
+        // --split-per-abi), whose splits Gradle won't combine with abiFilters
+        val splitPerAbi = project.findProperty("split-per-abi")?.toString()?.toBoolean() == true
         val tvAbis = listOf("arm64-v8a", "armeabi-v7a", "x86_64")
         create("mobile") {
             dimension = "device"
             applicationId = baseAppId
             versionCode = flutter.versionCode
             versionName = flutter.versionName
-            ndk { abiFilters += mobileAbis }
+            if (!splitPerAbi) ndk { abiFilters += mobileAbis }
             manifestPlaceholders["appName"] = baseAppName
         }
         create("mobile-beta") {
@@ -106,7 +109,7 @@ android {
             applicationId = "$baseAppId.beta"
             versionCode = flutter.versionCode
             versionName = flutter.versionName
-            ndk { abiFilters += mobileAbis }
+            if (!splitPerAbi) ndk { abiFilters += mobileAbis }
             manifestPlaceholders["appName"] = "$baseAppName Beta"
         }
         create("androidTv") {
@@ -114,7 +117,7 @@ android {
             applicationId = baseAppId + testIdSuffix
             versionCode = androidTvVersionCode
             versionName = androidTvVersionName
-            ndk { abiFilters += tvAbis }
+            if (!splitPerAbi) ndk { abiFilters += tvAbis }
             manifestPlaceholders["appName"] =
                 if (testIdSuffix.isEmpty()) baseAppName else "$baseAppName Test"
             // Impeller off by default on TV: the GLES fallback stutters on
@@ -127,7 +130,7 @@ android {
             applicationId = "$baseAppId.beta"
             versionCode = androidTvVersionCode
             versionName = androidTvVersionName
-            ndk { abiFilters += tvAbis }
+            if (!splitPerAbi) ndk { abiFilters += tvAbis }
             manifestPlaceholders["appName"] = "$baseAppName Beta"
             manifestPlaceholders["enableImpeller"] = "false"
         }
