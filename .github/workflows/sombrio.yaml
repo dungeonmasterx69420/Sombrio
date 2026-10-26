@@ -3,8 +3,9 @@ name: Sombrio builds
 # Release builds of Sombrio for Android, with the Music tab: sombrAMP (music/sombrAMP) is built as a Flutter module
 # first (music/build-module.sh), then the app around it. Every run uploads one APK per ABI as artifacts.
 #
-# Builds of main whose APKs are signed with the key from the secrets are also published as GitHub releases tagged
-# build-<versionCode>. The app offers them as updates. The five newest are kept.
+# Builds of main whose APKs are signed with the key from the secrets, and that open on Android emulators
+# (smoke-test.yaml), are also published as GitHub releases tagged build-<versionCode>. The app offers them as updates.
+# The five newest are kept.
 #
 # Optional repository secrets:
 #   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
@@ -102,13 +103,20 @@ jobs:
       # more memory than gradle.properties gives Gradle for the app with sombrAMP in it.
       - name: Build the APKs
         run: |
+          set -o pipefail # so that a failed build fails the step through tee
           ./gradlew --continue :app:phone:assembleLibreRelease -Psombrio.music=required \
             -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8" -Pkotlin.daemon.jvmargs=-Xmx3g \
             -Psombrio.versionCode="$BUILD_NUMBER" \
             -Pandroid.injected.signing.store.file="$SIGNING_STORE_FILE" \
             -Pandroid.injected.signing.store.password="$SIGNING_STORE_PASSWORD" \
             -Pandroid.injected.signing.key.alias="$SIGNING_KEY_ALIAS" \
-            -Pandroid.injected.signing.key.password="$SIGNING_KEY_PASSWORD"
+            -Pandroid.injected.signing.key.password="$SIGNING_KEY_PASSWORD" 2>&1 | tee gradle.log
+          # A resource string too long for aapt2 is stored as "STRING_TOO_LARGE" instead, without failing the build,
+          # and crashes the app when it's read (build 113's wordmark did)
+          if grep -q STRING_TOO_LARGE gradle.log; then
+            echo "::error::A resource string is over aapt2's 32 KB limit (STRING_TOO_LARGE), see the build log."
+            exit 1
+          fi
 
       - name: Name the APKs
         run: |
@@ -151,9 +159,17 @@ jobs:
           name: sombrio-mapping
           path: app/phone/build/outputs/mapping/libreRelease/mapping.txt
 
+  # Each build has to open on Android emulators before it's released
+  smoke-test:
+    name: Smoke test
+    needs: android
+    uses: ./.github/workflows/smoke-test.yaml
+    with:
+      artifact: sombrio-android
+
   release:
     name: Release
-    needs: android
+    needs: [android, smoke-test]
     if: github.ref == 'refs/heads/main' && needs.android.outputs.signed == 'true'
     runs-on: ubuntu-latest
     permissions:
