@@ -86,18 +86,19 @@ Future<void> _drive() async {
   final continueAs = find.textContaining('Continue as');
   await _waitFor('"Continue as"', () => _isShown(continueAs));
   await _shot('music-sign-in');
-  await controller.tap(continueAs.first);
+  await _tap(controller, continueAs);
   await _waitFor('the music library', () => GetIt.instance<FinampUserHelper>().currentUser?.currentView != null);
   final tracksTab = find.text('Tracks');
   await _waitFor('the Tracks tab', () => _isShown(tracksTab));
   await _pause(3);
   await _shot('music');
 
-  await controller.tap(tracksTab.first);
+  // On a phone, the tab bar scrolls
+  await _tap(controller, tracksTab);
   final track = find.text('Track 2');
   await _waitFor('"Track 2"', () => _isShown(track));
   await _pause(2);
-  await controller.tap(track.first);
+  await _tap(controller, track);
   final queue = GetIt.instance<QueueService>();
   await _waitFor('a track playing', () => queue.getCurrentTrack() != null);
   await _pause(5);
@@ -106,9 +107,11 @@ Future<void> _drive() async {
   _say('playing: $playing');
 
   // The way back
-  final back = find.byWidgetPredicate((widget) => widget is IconButtonWithSemantics && widget.label == 'Films and shows');
+  final back = find.byWidgetPredicate(
+    (widget) => widget is IconButtonWithSemantics && widget.label == 'Films and shows',
+  );
   if (_isShown(back)) {
-    await controller.tap(back.first);
+    await _tap(controller, back);
     await _pause(3);
     await _shot('back');
   }
@@ -122,12 +125,23 @@ Future<void> _drive() async {
 
 bool _isShown(Finder finder) => finder.evaluate().isNotEmpty;
 
+/// Taps the first widget [finder] finds, once scrolled into view.
+Future<void> _tap(WidgetController controller, Finder finder) async {
+  await controller.ensureVisible(finder.first);
+  await _pause(1);
+  await controller.tap(finder.first);
+}
+
 Future<void> _pause(int seconds) => Future<void>.delayed(Duration(seconds: seconds));
 
 Future<void> _waitFor(String what, bool Function() done, {int seconds = 90}) async {
   final end = DateTime.now().add(Duration(seconds: seconds));
   while (!done()) {
-    if (DateTime.now().isAfter(end)) throw TimeoutException('No $what after $seconds seconds');
+    if (DateTime.now().isAfter(end)) {
+      final texts = find.byType(Text).evaluate().map((element) => (element.widget as Text).data).nonNulls;
+      _say('on screen: ${texts.take(60).join(' | ')}');
+      throw TimeoutException('No $what after $seconds seconds');
+    }
     await _pause(1);
   }
   _say('got $what');
