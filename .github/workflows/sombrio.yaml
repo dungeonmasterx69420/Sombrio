@@ -1,11 +1,11 @@
 name: Sombrio builds
 
-# Release builds of Sombrio for Android, with the Music tab: sombrAMP (music/sombrAMP) is built as a Flutter module
-# first (music/build-module.sh), then the app around it. Every run uploads one APK per ABI as artifacts.
+# Release builds of Sombrio for Android: Moonfin's Flutter app, with the Music tab, sombrAMP (music/sombrAMP), as a
+# package of it. Every run uploads one APK per ABI as artifacts.
 #
 # Builds of main whose APKs are signed with the key from the secrets, and that open on Android emulators
-# (smoke-test.yaml), are also published as GitHub releases tagged build-<versionCode>. The app offers them as updates.
-# The five newest are kept.
+# (smoke-test.yaml), are also published as GitHub releases tagged build-<number>. The app offers them as updates
+# (lib/sombrio/sombrio_updates.dart), as the Sombrio builds before Moonfin did. The five newest are kept.
 #
 # Optional repository secrets:
 #   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
@@ -24,7 +24,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # The Flutter version sombrAMP is built with (FLUTTER_VERSION in music/sombrAMP/.github/workflows/sombramp.yml)
+  # The Flutter version both Moonfin and sombrAMP build with (FLUTTER_VERSION in music/sombrAMP/.github/workflows/sombramp.yml)
   FLUTTER_VERSION: '3.47.7'
 
 jobs:
@@ -54,11 +54,10 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
 
-      - name: Build sombrAMP for the Music tab
-        run: music/build-module.sh
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v6
+      # pub doesn't generate a dependency's translations, which sombrAMP doesn't commit
+      - name: Generate sombrAMP's translations
+        working-directory: music/sombrAMP
+        run: flutter gen-l10n
 
       - name: Set up signing
         id: signing
@@ -68,9 +67,10 @@ jobs:
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          keystore="$RUNNER_TEMP/release.jks"
+          # Where android/app/build.gradle.kts looks for them
+          keystore=android/app/release.keystore
           if [ -n "$KEYSTORE_BASE64" ]; then
-            echo "$KEYSTORE_BASE64" | base64 -d > "$keystore"
+            printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$keystore"
             alias="$KEY_ALIAS"
             store_password="$KEYSTORE_PASSWORD"
             key_password="${KEY_PASSWORD:-$KEYSTORE_PASSWORD}"
@@ -87,63 +87,54 @@ jobs:
           fi
           echo "::add-mask::$store_password"
           echo "::add-mask::$key_password"
-          {
-            echo "SIGNING_STORE_FILE=$keystore"
-            echo "SIGNING_STORE_PASSWORD=$store_password"
-            echo "SIGNING_KEY_ALIAS=$alias"
-            echo "SIGNING_KEY_PASSWORD=$key_password"
-          } >> "$GITHUB_ENV"
+          # Fails here, with a clear error, when the keystore or its password is wrong
+          keytool -list -keystore "$keystore" -storepass "$store_password" > /dev/null
+          cat > android/keystore.properties <<EOF
+          storePassword=$store_password
+          keyAlias=$alias
+          keyPassword=$key_password
+          EOF
 
-      # Every build gets a higher versionCode than the last, so Android installs it as an update. 100 keeps it above
-      # Findroid's own version codes.
+      # Every build gets a higher number than the last, which is its release's tag and, with the ABI in front of it
+      # (Flutter adds 1000, 2000 or 4000 for armeabi-v7a, arm64-v8a and x86_64), its versionCode, so Android installs
+      # it as an update. 100 keeps it above the Sombrio builds before Moonfin, which numbered themselves the same way.
       - name: Number the build
         run: echo "BUILD_NUMBER=$((100 + GITHUB_RUN_NUMBER))" >> "$GITHUB_ENV"
 
-      # --continue: when something doesn't compile, the rest is still built, to show every error at once. R8 needs
-      # more memory than gradle.properties gives Gradle for the app with sombrAMP in it.
+      # SOMBRIO tells sombrAMP it runs inside Sombrio (music/sombrAMP/lib/sombra/sombrio_host.dart), SOMBRIO_BUILD is
+      # the number the updater compares releases with, and DISTRIBUTION_CHANNEL turns Moonfin's update check on.
       - name: Build the APKs
         run: |
-          set -o pipefail # so that a failed build fails the step through tee
-          ./gradlew --continue :app:phone:assembleLibreRelease -Psombrio.music=required \
-            -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8" -Pkotlin.daemon.jvmargs=-Xmx3g \
-            -Psombrio.versionCode="$BUILD_NUMBER" \
-            -Pandroid.injected.signing.store.file="$SIGNING_STORE_FILE" \
-            -Pandroid.injected.signing.store.password="$SIGNING_STORE_PASSWORD" \
-            -Pandroid.injected.signing.key.alias="$SIGNING_KEY_ALIAS" \
-            -Pandroid.injected.signing.key.password="$SIGNING_KEY_PASSWORD" 2>&1 | tee gradle.log
-          # A resource string too long for aapt2 is stored as "STRING_TOO_LARGE" instead, without failing the build,
-          # and crashes the app when it's read (build 113's wordmark did)
-          if grep -q STRING_TOO_LARGE gradle.log; then
-            echo "::error::A resource string is over aapt2's 32 KB limit (STRING_TOO_LARGE), see the build log."
-            exit 1
-          fi
+          flutter build apk --release --flavor mobile --split-per-abi \
+            --target-platform android-arm,android-arm64,android-x64 \
+            --build-number "$BUILD_NUMBER" \
+            --dart-define=SOMBRIO=true \
+            --dart-define=SOMBRIO_BUILD="$BUILD_NUMBER" \
+            --dart-define=DISTRIBUTION_CHANNEL=apk
 
       - name: Name the APKs
         run: |
           mkdir apks
-          for apk in app/phone/build/outputs/apk/libre/release/phone-libre-*-release.apk; do
-            abi="${apk##*/phone-libre-}"
-            abi="${abi%-release.apk}"
+          for apk in build/app/outputs/flutter-apk/app-*-mobile-release.apk; do
+            abi="${apk##*/app-}"
+            abi="${abi%-mobile-release.apk}"
             cp "$apk" "apks/sombrio-${GITHUB_REF_NAME//\//-}-$abi.apk"
           done
           ls -l apks
 
-      # Each APK has the Music tab: the Flutter engine, sombrAMP compiled for its ABI and its assets, and the activity
-      # it runs in.
+      # Each APK is Sombrio's, for one ABI, with the Flutter engine and the app compiled for it
       - name: Check the APKs
         run: |
           aapt2="$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | sort -V | tail -n 1)"
-          for apk in apks/*.apk; do
-            abi="$(grep -oE '(armeabi-v7a|arm64-v8a|x86_64)\.apk$' <<< "$apk")"
-            abi="${abi%.apk}"
+          for abi in armeabi-v7a arm64-v8a x86_64; do
+            apk="$(ls apks/*-"$abi".apk)" || { echo "::error::No APK for $abi"; exit 1; }
             files="$(unzip -Z1 "$apk")"
             for file in "lib/$abi/libflutter.so" "lib/$abi/libapp.so" assets/flutter_assets/; do
               grep -q "^$file" <<< "$files" || { echo "::error::$apk has no $file"; exit 1; }
             done
-            manifest="$("$aapt2" dump xmltree --file AndroidManifest.xml "$apk")"
-            grep -q "wtf.sombra.sombrio.music.MusicActivity" <<< "$manifest" ||
-              { echo "::error::$apk has no MusicActivity"; exit 1; }
             badging="$("$aapt2" dump badging "$apk")"
+            grep -q "package: name='wtf.sombra.sombrio'" <<< "$badging" ||
+              { echo "::error::$apk isn't wtf.sombra.sombrio"; exit 1; }
             echo "$abi: ${badging%%$'\n'*}"
           done
 
@@ -152,12 +143,6 @@ jobs:
           name: sombrio-android
           path: apks/*.apk
           compression-level: 0 # an APK is already compressed
-
-      # R8 renames classes in release builds; its mapping turns a crash's stack trace back into readable names
-      - uses: actions/upload-artifact@v6
-        with:
-          name: sombrio-mapping
-          path: app/phone/build/outputs/mapping/libreRelease/mapping.txt
 
   # Each build has to open on Android emulators before it's released
   smoke-test:
